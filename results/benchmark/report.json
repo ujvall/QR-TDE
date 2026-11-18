@@ -1,0 +1,5483 @@
+{
+  "threshold_rule": "validation specificity >= 0.95",
+  "thresholds": {
+    "baseline_engine": "verdict",
+    "integrated_engine": "verdict",
+    "baseline_ecc_v3m": "verdict",
+    "decode_failure": "verdict",
+    "baseline_peak": 0.384314,
+    "rs_capacity": 0.2857142857142857,
+    "resnet18": 0.33895182609558105,
+    "vit_finetune": 0.4970703423023224,
+    "vit_probe": 0.660664439201355,
+    "conv_ae": 0.24386636912822723,
+    "patchcore": 3.281506299972534,
+    "baseline_peak_original": 0.52549,
+    "rs_capacity+baseline_peak": "each component at 0.975 validation specificity",
+    "rs_capacity+resnet18": "each component at 0.975 validation specificity",
+    "rs_capacity+baseline_peak+resnet18": "each component at 0.983 validation specificity",
+    "ablation_engine_plus_rs": "deployed thresholds",
+    "ablation_rs_plus_peak": "deployed thresholds"
+  },
+  "labels": {
+    "baseline_engine": "Original engine (ECC V3-M + peak), before this work",
+    "integrated_engine": "Updated engine (original + RS capacity), as now deployed",
+    "baseline_ecc_v3m": "Current ECC rule alone (V3-M, any non-zero syndrome)",
+    "decode_failure": "Localized but undecodable",
+    "baseline_peak": "Peak residual, recalibrated",
+    "rs_capacity": "Generic RS capacity used (new, all versions)",
+    "resnet18": "ResNet-18 fine-tuned",
+    "vit_finetune": "ViT-B/16 fine-tuned",
+    "vit_probe": "ViT-B/16 frozen + logistic regression",
+    "conv_ae": "Conv autoencoder (one-class)",
+    "patchcore": "PatchCore-style kNN (one-class)",
+    "baseline_peak_original": "Peak residual, original threshold 0.5255",
+    "rs_capacity+baseline_peak": "Classical: RS capacity OR peak (recalibrated)",
+    "rs_capacity+resnet18": "RS capacity OR ResNet-18",
+    "rs_capacity+baseline_peak+resnet18": "RS capacity OR peak OR ResNet-18",
+    "ablation_engine_plus_rs": "Ablation: current engine + RS capacity",
+    "ablation_rs_plus_peak": "Ablation: RS capacity + original peak (V3-M binary rule removed)"
+  },
+  "splits": {
+    "val": {
+      "n_genuine": 210,
+      "n_tampered": 210,
+      "bootstrap_unit": "group_id",
+      "detectors": {
+        "baseline_engine": {
+          "n": 420,
+          "tp": 13,
+          "tn": 189,
+          "fp": 21,
+          "fn": 197,
+          "accuracy": 0.48095238095238096,
+          "precision": 0.38235294117647056,
+          "recall": 0.06190476190476191,
+          "specificity": 0.9,
+          "f1": 0.10655737704918034,
+          "fpr": 0.1,
+          "fnr": 0.9380952380952381,
+          "roc_auc": 0.48095238095238096,
+          "pr_auc": 0.4927170868347339,
+          "recall_ci95": [
+            0.02857142857142857,
+            0.10097373188405791
+          ],
+          "specificity_ci95": [
+            0.8476108374384236,
+            0.9450113636363635
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.08333333333333333
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.0625
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.21428571428571427
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.027777777777777776
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.06060606060606061
+            }
+          }
+        },
+        "integrated_engine": {
+          "n": 420,
+          "tp": 69,
+          "tn": 181,
+          "fp": 29,
+          "fn": 141,
+          "accuracy": 0.5952380952380952,
+          "precision": 0.7040816326530612,
+          "recall": 0.32857142857142857,
+          "specificity": 0.861904761904762,
+          "f1": 0.4480519480519481,
+          "fpr": 0.1380952380952381,
+          "fnr": 0.6714285714285714,
+          "roc_auc": 0.5952380952380952,
+          "pr_auc": 0.5670553935860059,
+          "recall_ci95": [
+            0.2651060191518468,
+            0.39130947497949137
+          ],
+          "specificity_ci95": [
+            0.80566407131573,
+            0.9113300492610837
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.4642857142857143
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.5416666666666666
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.5625
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.2857142857142857
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.08333333333333333
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.42424242424242425
+            }
+          }
+        },
+        "baseline_ecc_v3m": {
+          "n": 420,
+          "tp": 13,
+          "tn": 189,
+          "fp": 21,
+          "fn": 197,
+          "accuracy": 0.48095238095238096,
+          "precision": 0.38235294117647056,
+          "recall": 0.06190476190476191,
+          "specificity": 0.9,
+          "f1": 0.10655737704918034,
+          "fpr": 0.1,
+          "fnr": 0.9380952380952381,
+          "roc_auc": 0.48095238095238096,
+          "pr_auc": 0.4927170868347339,
+          "recall_ci95": [
+            0.02857142857142857,
+            0.10097373188405791
+          ],
+          "specificity_ci95": [
+            0.8476108374384236,
+            0.9450113636363635
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.08333333333333333
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.0625
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.21428571428571427
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.027777777777777776
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.06060606060606061
+            }
+          }
+        },
+        "decode_failure": {
+          "n": 420,
+          "tp": 45,
+          "tn": 196,
+          "fp": 14,
+          "fn": 165,
+          "accuracy": 0.5738095238095238,
+          "precision": 0.7627118644067796,
+          "recall": 0.21428571428571427,
+          "specificity": 0.9333333333333333,
+          "f1": 0.33457249070631967,
+          "fpr": 0.06666666666666667,
+          "fnr": 0.7857142857142857,
+          "roc_auc": 0.5738095238095238,
+          "pr_auc": 0.5562953995157385,
+          "recall_ci95": [
+            0.15639810426540285,
+            0.27522935779816515
+          ],
+          "specificity_ci95": [
+            0.8990384615384616,
+            0.9666666666666667
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.13793103448275862
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.5
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.20833333333333334
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.15625
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.10714285714285714
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.1388888888888889
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.2727272727272727
+            }
+          }
+        },
+        "baseline_peak": {
+          "n": 420,
+          "tp": 9,
+          "tn": 200,
+          "fp": 10,
+          "fn": 201,
+          "accuracy": 0.4976190476190476,
+          "precision": 0.47368421052631576,
+          "recall": 0.04285714285714286,
+          "specificity": 0.9523809523809523,
+          "f1": 0.07860262008733623,
+          "fpr": 0.047619047619047616,
+          "fnr": 0.9571428571428572,
+          "roc_auc": 0.44909297052154196,
+          "pr_auc": 0.48762494018763963,
+          "recall_ci95": [
+            0.018957345971563982,
+            0.072472562262558
+          ],
+          "specificity_ci95": [
+            0.9234357747515642,
+            0.9774176162611639
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.041666666666666664
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.0625
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.07142857142857142
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.05555555555555555
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.06060606060606061
+            }
+          }
+        },
+        "rs_capacity": {
+          "n": 420,
+          "tp": 61,
+          "tn": 202,
+          "fp": 8,
+          "fn": 149,
+          "accuracy": 0.6261904761904762,
+          "precision": 0.8840579710144928,
+          "recall": 0.2904761904761905,
+          "specificity": 0.9619047619047619,
+          "f1": 0.43727598566308246,
+          "fpr": 0.0380952380952381,
+          "fnr": 0.7095238095238096,
+          "roc_auc": 0.5318027210884354,
+          "pr_auc": 0.6706924463031014,
+          "recall_ci95": [
+            0.22814913072928428,
+            0.35436893203883496
+          ],
+          "specificity_ci95": [
+            0.9356435643564357,
+            0.9858490566037735
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.4642857142857143
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.5416666666666666
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.5
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.10714285714285714
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.05555555555555555
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.42424242424242425
+            }
+          }
+        },
+        "resnet18": {
+          "n": 420,
+          "tp": 114,
+          "tn": 200,
+          "fp": 10,
+          "fn": 96,
+          "accuracy": 0.7476190476190476,
+          "precision": 0.9193548387096774,
+          "recall": 0.5428571428571428,
+          "specificity": 0.9523809523809523,
+          "f1": 0.6826347305389221,
+          "fpr": 0.047619047619047616,
+          "fnr": 0.45714285714285713,
+          "roc_auc": 0.6830045351473923,
+          "pr_auc": 0.8021595337607008,
+          "recall_ci95": [
+            0.4741722848941993,
+            0.6093023255813953
+          ],
+          "specificity_ci95": [
+            0.9177999069025137,
+            0.9809546377792823
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.10344827586206896
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.9642857142857143
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.625
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.1875
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.6785714285714286
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.7222222222222222
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.5454545454545454
+            }
+          }
+        },
+        "vit_finetune": {
+          "n": 420,
+          "tp": 117,
+          "tn": 200,
+          "fp": 10,
+          "fn": 93,
+          "accuracy": 0.7547619047619047,
+          "precision": 0.9212598425196851,
+          "recall": 0.5571428571428572,
+          "specificity": 0.9523809523809523,
+          "f1": 0.6943620178041543,
+          "fpr": 0.047619047619047616,
+          "fnr": 0.44285714285714284,
+          "roc_auc": 0.7130158730158729,
+          "pr_auc": 0.8205911855573144,
+          "recall_ci95": [
+            0.49073857736240917,
+            0.624366101275226
+          ],
+          "specificity_ci95": [
+            0.9155539906103286,
+            0.9845400273511467
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.13793103448275862
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.9285714285714286
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.625
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.21875
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.7142857142857143
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.7222222222222222
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.5757575757575758
+            }
+          }
+        },
+        "vit_probe": {
+          "n": 420,
+          "tp": 72,
+          "tn": 200,
+          "fp": 10,
+          "fn": 138,
+          "accuracy": 0.6476190476190476,
+          "precision": 0.8780487804878049,
+          "recall": 0.34285714285714286,
+          "specificity": 0.9523809523809523,
+          "f1": 0.4931506849315069,
+          "fpr": 0.047619047619047616,
+          "fnr": 0.6571428571428571,
+          "roc_auc": 0.6329705215419501,
+          "pr_auc": 0.7299378516420612,
+          "recall_ci95": [
+            0.2731376262626263,
+            0.41148325358851673
+          ],
+          "specificity_ci95": [
+            0.9223223033757906,
+            0.9777075066137564
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.10344827586206896
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.9285714285714286
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.2916666666666667
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.125
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.25
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.5277777777777778
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.18181818181818182
+            }
+          }
+        },
+        "conv_ae": {
+          "n": 420,
+          "tp": 12,
+          "tn": 200,
+          "fp": 10,
+          "fn": 198,
+          "accuracy": 0.5047619047619047,
+          "precision": 0.5454545454545454,
+          "recall": 0.05714285714285714,
+          "specificity": 0.9523809523809523,
+          "f1": 0.10344827586206896,
+          "fpr": 0.047619047619047616,
+          "fnr": 0.9428571428571428,
+          "roc_auc": 0.44792517006802723,
+          "pr_auc": 0.48980663476940056,
+          "recall_ci95": [
+            0.02843601895734597,
+            0.08756164605061037
+          ],
+          "specificity_ci95": [
+            0.9226959335866047,
+            0.9799044976124404
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.034482758620689655
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.07142857142857142
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.041666666666666664
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.03125
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.07142857142857142
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.1111111111111111
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.030303030303030304
+            }
+          }
+        },
+        "patchcore": {
+          "n": 420,
+          "tp": 13,
+          "tn": 200,
+          "fp": 10,
+          "fn": 197,
+          "accuracy": 0.5071428571428571,
+          "precision": 0.5652173913043478,
+          "recall": 0.06190476190476191,
+          "specificity": 0.9523809523809523,
+          "f1": 0.11158798283261803,
+          "fpr": 0.047619047619047616,
+          "fnr": 0.9380952380952381,
+          "roc_auc": 0.4927210884353741,
+          "pr_auc": 0.5204694361328372,
+          "recall_ci95": [
+            0.03211009174311927,
+            0.0947867298578199
+          ],
+          "specificity_ci95": [
+            0.9227053140096618,
+            0.9801068188469417
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.10344827586206896
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.10714285714285714
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.041666666666666664
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.03125
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.03571428571428571
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.08333333333333333
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.030303030303030304
+            }
+          }
+        },
+        "baseline_peak_original": {
+          "n": 420,
+          "tp": 0,
+          "tn": 210,
+          "fp": 0,
+          "fn": 210,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.44909297052154196,
+          "pr_auc": 0.48762494018763963,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.0
+            }
+          }
+        },
+        "rs_capacity+baseline_peak": {
+          "n": 420,
+          "tp": 45,
+          "tn": 201,
+          "fp": 9,
+          "fn": 165,
+          "accuracy": 0.5857142857142857,
+          "precision": 0.8333333333333334,
+          "recall": 0.21428571428571427,
+          "specificity": 0.9571428571428572,
+          "f1": 0.3409090909090909,
+          "fpr": 0.04285714285714286,
+          "fnr": 0.7857142857142857,
+          "recall_ci95": [
+            0.15533131067961164,
+            0.27189967763570666
+          ],
+          "specificity_ci95": [
+            0.9292917381360778,
+            0.9813084112149533
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.42857142857142855
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.4166666666666667
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.3125
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.03571428571428571
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.05555555555555555
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.30303030303030304
+            }
+          }
+        },
+        "rs_capacity+resnet18": {
+          "n": 420,
+          "tp": 126,
+          "tn": 202,
+          "fp": 8,
+          "fn": 84,
+          "accuracy": 0.780952380952381,
+          "precision": 0.9402985074626866,
+          "recall": 0.6,
+          "specificity": 0.9619047619047619,
+          "f1": 0.7325581395348838,
+          "fpr": 0.0380952380952381,
+          "fnr": 0.4,
+          "recall_ci95": [
+            0.5353971127201216,
+            0.6651550387596897
+          ],
+          "specificity_ci95": [
+            0.9303482587064676,
+            0.9862385321100917
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.10344827586206896
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.9642857142857143
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.875
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.34375
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.6785714285714286
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.6388888888888888
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.6666666666666666
+            }
+          }
+        },
+        "rs_capacity+baseline_peak+resnet18": {
+          "n": 420,
+          "tp": 118,
+          "tn": 201,
+          "fp": 9,
+          "fn": 92,
+          "accuracy": 0.7595238095238095,
+          "precision": 0.9291338582677166,
+          "recall": 0.5619047619047619,
+          "specificity": 0.9571428571428572,
+          "f1": 0.7002967359050446,
+          "fpr": 0.04285714285714286,
+          "fnr": 0.4380952380952381,
+          "recall_ci95": [
+            0.49536928868120456,
+            0.6298076923076923
+          ],
+          "specificity_ci95": [
+            0.9238095238095239,
+            0.9845457959902606
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.10344827586206896
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.9642857142857143
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.7083333333333334
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.3125
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.6428571428571429
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.6388888888888888
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.6060606060606061
+            }
+          }
+        },
+        "ablation_engine_plus_rs": {
+          "n": 420,
+          "tp": 68,
+          "tn": 181,
+          "fp": 29,
+          "fn": 142,
+          "accuracy": 0.5928571428571429,
+          "precision": 0.7010309278350515,
+          "recall": 0.3238095238095238,
+          "specificity": 0.861904761904762,
+          "f1": 0.4429967426710098,
+          "fpr": 0.1380952380952381,
+          "fnr": 0.6761904761904762,
+          "recall_ci95": [
+            0.25980392156862747,
+            0.3883564165094556
+          ],
+          "specificity_ci95": [
+            0.80566407131573,
+            0.9113300492610837
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.4642857142857143
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.5416666666666666
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.53125
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.2857142857142857
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.08333333333333333
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.42424242424242425
+            }
+          }
+        },
+        "ablation_rs_plus_peak": {
+          "n": 420,
+          "tp": 61,
+          "tn": 202,
+          "fp": 8,
+          "fn": 149,
+          "accuracy": 0.6261904761904762,
+          "precision": 0.8840579710144928,
+          "recall": 0.2904761904761905,
+          "specificity": 0.9619047619047619,
+          "f1": 0.43727598566308246,
+          "fpr": 0.0380952380952381,
+          "fnr": 0.7095238095238096,
+          "recall_ci95": [
+            0.22814913072928428,
+            0.35436893203883496
+          ],
+          "specificity_ci95": [
+            0.9356435643564357,
+            0.9858490566037735
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 28,
+              "recall": 0.4642857142857143
+            },
+            "marker_edit": {
+              "n": 24,
+              "recall": 0.5416666666666666
+            },
+            "module_patch": {
+              "n": 32,
+              "recall": 0.5
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.10714285714285714
+            },
+            "sticker_replacement": {
+              "n": 36,
+              "recall": 0.05555555555555555
+            },
+            "white_out": {
+              "n": 33,
+              "recall": 0.42424242424242425
+            }
+          }
+        }
+      }
+    },
+    "test_synthetic": {
+      "n_genuine": 225,
+      "n_tampered": 225,
+      "bootstrap_unit": "group_id",
+      "detectors": {
+        "baseline_engine": {
+          "n": 450,
+          "tp": 34,
+          "tn": 192,
+          "fp": 33,
+          "fn": 191,
+          "accuracy": 0.5022222222222222,
+          "precision": 0.5074626865671642,
+          "recall": 0.1511111111111111,
+          "specificity": 0.8533333333333334,
+          "f1": 0.23287671232876714,
+          "fpr": 0.14666666666666667,
+          "fnr": 0.8488888888888889,
+          "roc_auc": 0.5022222222222222,
+          "pr_auc": 0.5011276948590382,
+          "recall_ci95": [
+            0.1,
+            0.20889393939393938
+          ],
+          "specificity_ci95": [
+            0.7901785714285714,
+            0.910640197568389
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.15625
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.14705882352941177
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.3142857142857143
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.14285714285714285
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.10344827586206896
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.15789473684210525
+            }
+          }
+        },
+        "integrated_engine": {
+          "n": 450,
+          "tp": 103,
+          "tn": 184,
+          "fp": 41,
+          "fn": 122,
+          "accuracy": 0.6377777777777778,
+          "precision": 0.7152777777777778,
+          "recall": 0.4577777777777778,
+          "specificity": 0.8177777777777778,
+          "f1": 0.5582655826558266,
+          "fpr": 0.18222222222222223,
+          "fnr": 0.5422222222222223,
+          "roc_auc": 0.6377777777777778,
+          "pr_auc": 0.5985493827160493,
+          "recall_ci95": [
+            0.3903323650034176,
+            0.5240227574399322
+          ],
+          "specificity_ci95": [
+            0.7554539089418311,
+            0.8783815357413488
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.78125
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.6764705882352942
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.6571428571428571
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.2857142857142857
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.13793103448275862
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.5263157894736842
+            }
+          }
+        },
+        "baseline_ecc_v3m": {
+          "n": 450,
+          "tp": 34,
+          "tn": 192,
+          "fp": 33,
+          "fn": 191,
+          "accuracy": 0.5022222222222222,
+          "precision": 0.5074626865671642,
+          "recall": 0.1511111111111111,
+          "specificity": 0.8533333333333334,
+          "f1": 0.23287671232876714,
+          "fpr": 0.14666666666666667,
+          "fnr": 0.8488888888888889,
+          "roc_auc": 0.5022222222222222,
+          "pr_auc": 0.5011276948590382,
+          "recall_ci95": [
+            0.1,
+            0.20889393939393938
+          ],
+          "specificity_ci95": [
+            0.7901785714285714,
+            0.910640197568389
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.15625
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.14705882352941177
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.3142857142857143
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.14285714285714285
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.10344827586206896
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.15789473684210525
+            }
+          }
+        },
+        "decode_failure": {
+          "n": 450,
+          "tp": 39,
+          "tn": 205,
+          "fp": 20,
+          "fn": 186,
+          "accuracy": 0.5422222222222223,
+          "precision": 0.6610169491525424,
+          "recall": 0.17333333333333334,
+          "specificity": 0.9111111111111111,
+          "f1": 0.2746478873239437,
+          "fpr": 0.08888888888888889,
+          "fnr": 0.8266666666666667,
+          "roc_auc": 0.5422222222222222,
+          "pr_auc": 0.527909604519774,
+          "recall_ci95": [
+            0.1271821719792439,
+            0.22123893805309736
+          ],
+          "specificity_ci95": [
+            0.874439461883408,
+            0.9459520058174766
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.20689655172413793
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.25
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.11764705882352941
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.08571428571428572
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.2857142857142857
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.2631578947368421
+            }
+          }
+        },
+        "baseline_peak": {
+          "n": 450,
+          "tp": 18,
+          "tn": 211,
+          "fp": 14,
+          "fn": 207,
+          "accuracy": 0.5088888888888888,
+          "precision": 0.5625,
+          "recall": 0.08,
+          "specificity": 0.9377777777777778,
+          "f1": 0.14007782101167315,
+          "fpr": 0.06222222222222222,
+          "fnr": 0.92,
+          "roc_auc": 0.44707160493827164,
+          "pr_auc": 0.48813155433168726,
+          "recall_ci95": [
+            0.04586632315361736,
+            0.11711711711711711
+          ],
+          "specificity_ci95": [
+            0.9036657009496217,
+            0.968609865470852
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.06896551724137931
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.03125
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.08823529411764706
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.08571428571428572
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.17857142857142858
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.06896551724137931
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.05263157894736842
+            }
+          }
+        },
+        "rs_capacity": {
+          "n": 450,
+          "tp": 89,
+          "tn": 216,
+          "fp": 9,
+          "fn": 136,
+          "accuracy": 0.6777777777777778,
+          "precision": 0.9081632653061225,
+          "recall": 0.39555555555555555,
+          "specificity": 0.96,
+          "f1": 0.5510835913312693,
+          "fpr": 0.04,
+          "fnr": 0.6044444444444445,
+          "roc_auc": 0.6246419753086421,
+          "pr_auc": 0.7320910493439664,
+          "recall_ci95": [
+            0.32882882882882886,
+            0.46227959957155795
+          ],
+          "specificity_ci95": [
+            0.9299044925397607,
+            0.9826858486341246
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.75
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.6764705882352942
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.5428571428571428
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.17857142857142858
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.034482758620689655
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.4473684210526316
+            }
+          }
+        },
+        "resnet18": {
+          "n": 450,
+          "tp": 126,
+          "tn": 208,
+          "fp": 17,
+          "fn": 99,
+          "accuracy": 0.7422222222222222,
+          "precision": 0.8811188811188811,
+          "recall": 0.56,
+          "specificity": 0.9244444444444444,
+          "f1": 0.6847826086956521,
+          "fpr": 0.07555555555555556,
+          "fnr": 0.44,
+          "roc_auc": 0.7367209876543209,
+          "pr_auc": 0.8254823538387491,
+          "recall_ci95": [
+            0.49557522123893805,
+            0.6278127515235138
+          ],
+          "specificity_ci95": [
+            0.8883720930232558,
+            0.9583428899082569
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.27586206896551724
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.5588235294117647
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.05714285714285714
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.7142857142857143
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.896551724137931
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.5
+            }
+          }
+        },
+        "vit_finetune": {
+          "n": 450,
+          "tp": 134,
+          "tn": 210,
+          "fp": 15,
+          "fn": 91,
+          "accuracy": 0.7644444444444445,
+          "precision": 0.8993288590604027,
+          "recall": 0.5955555555555555,
+          "specificity": 0.9333333333333333,
+          "f1": 0.7165775401069517,
+          "fpr": 0.06666666666666667,
+          "fnr": 0.40444444444444444,
+          "roc_auc": 0.7574222222222223,
+          "pr_auc": 0.8440610169800982,
+          "recall_ci95": [
+            0.5344827586206896,
+            0.6606374708473698
+          ],
+          "specificity_ci95": [
+            0.8990825688073395,
+            0.9636404771698889
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.20689655172413793
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.5882352941176471
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.2571428571428571
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.7142857142857143
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.9310344827586207
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.5263157894736842
+            }
+          }
+        },
+        "vit_probe": {
+          "n": 450,
+          "tp": 91,
+          "tn": 209,
+          "fp": 16,
+          "fn": 134,
+          "accuracy": 0.6666666666666666,
+          "precision": 0.8504672897196262,
+          "recall": 0.40444444444444444,
+          "specificity": 0.9288888888888889,
+          "f1": 0.5481927710843374,
+          "fpr": 0.07111111111111111,
+          "fnr": 0.5955555555555555,
+          "roc_auc": 0.6617481481481482,
+          "pr_auc": 0.7394280841859324,
+          "recall_ci95": [
+            0.3392070484581498,
+            0.4761960916442048
+          ],
+          "specificity_ci95": [
+            0.8922326421248835,
+            0.9631378683465099
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.13793103448275862
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.9375
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.35294117647058826
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.2
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.2857142857142857
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.7931034482758621
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.18421052631578946
+            }
+          }
+        },
+        "conv_ae": {
+          "n": 450,
+          "tp": 10,
+          "tn": 213,
+          "fp": 12,
+          "fn": 215,
+          "accuracy": 0.4955555555555556,
+          "precision": 0.45454545454545453,
+          "recall": 0.044444444444444446,
+          "specificity": 0.9466666666666667,
+          "f1": 0.08097165991902835,
+          "fpr": 0.05333333333333334,
+          "fnr": 0.9555555555555556,
+          "roc_auc": 0.44583703703703703,
+          "pr_auc": 0.4810316110375913,
+          "recall_ci95": [
+            0.0182648401826484,
+            0.07240447461035694
+          ],
+          "specificity_ci95": [
+            0.9140212981744422,
+            0.9769585253456221
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.06896551724137931
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.03125
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.029411764705882353
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.07142857142857142
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.034482758620689655
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.07894736842105263
+            }
+          }
+        },
+        "patchcore": {
+          "n": 450,
+          "tp": 15,
+          "tn": 218,
+          "fp": 7,
+          "fn": 210,
+          "accuracy": 0.5177777777777778,
+          "precision": 0.6818181818181818,
+          "recall": 0.06666666666666667,
+          "specificity": 0.9688888888888889,
+          "f1": 0.1214574898785425,
+          "fpr": 0.03111111111111111,
+          "fnr": 0.9333333333333333,
+          "roc_auc": 0.5215703703703704,
+          "pr_auc": 0.5538295009056238,
+          "recall_ci95": [
+            0.03587443946188341,
+            0.1013215859030837
+          ],
+          "specificity_ci95": [
+            0.9446749408983451,
+            0.9909502262443439
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.13793103448275862
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.08571428571428572
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.07142857142857142
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.10344827586206896
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.07894736842105263
+            }
+          }
+        },
+        "baseline_peak_original": {
+          "n": 450,
+          "tp": 0,
+          "tn": 225,
+          "fp": 0,
+          "fn": 225,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.44707160493827164,
+          "pr_auc": 0.48813155433168726,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.0
+            }
+          }
+        },
+        "rs_capacity+baseline_peak": {
+          "n": 450,
+          "tp": 66,
+          "tn": 216,
+          "fp": 9,
+          "fn": 159,
+          "accuracy": 0.6266666666666667,
+          "precision": 0.88,
+          "recall": 0.29333333333333333,
+          "specificity": 0.96,
+          "f1": 0.44,
+          "fpr": 0.04,
+          "fnr": 0.7066666666666667,
+          "recall_ci95": [
+            0.22972972972972974,
+            0.35652940049798887
+          ],
+          "specificity_ci95": [
+            0.9318025437864887,
+            0.9864864864864865
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.75
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.4411764705882353
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.3142857142857143
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.17857142857142858
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.034482758620689655
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.2631578947368421
+            }
+          }
+        },
+        "rs_capacity+resnet18": {
+          "n": 450,
+          "tp": 144,
+          "tn": 212,
+          "fp": 13,
+          "fn": 81,
+          "accuracy": 0.7911111111111111,
+          "precision": 0.9171974522292994,
+          "recall": 0.64,
+          "specificity": 0.9422222222222222,
+          "f1": 0.7539267015706808,
+          "fpr": 0.057777777777777775,
+          "fnr": 0.36,
+          "recall_ci95": [
+            0.5772682218662395,
+            0.7053571428571429
+          ],
+          "specificity_ci95": [
+            0.9118845269190284,
+            0.9697002351097179
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.27586206896551724
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.7941176470588235
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.2857142857142857
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.6785714285714286
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.8620689655172413
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.6052631578947368
+            }
+          }
+        },
+        "rs_capacity+baseline_peak+resnet18": {
+          "n": 450,
+          "tp": 136,
+          "tn": 216,
+          "fp": 9,
+          "fn": 89,
+          "accuracy": 0.7822222222222223,
+          "precision": 0.9379310344827586,
+          "recall": 0.6044444444444445,
+          "specificity": 0.96,
+          "f1": 0.7351351351351352,
+          "fpr": 0.04,
+          "fnr": 0.39555555555555555,
+          "recall_ci95": [
+            0.5367775242775243,
+            0.6711126126126126
+          ],
+          "specificity_ci95": [
+            0.9336283185840708,
+            0.9825346497057148
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.27586206896551724
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.7941176470588235
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.2857142857142857
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.6071428571428571
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.6896551724137931
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.5789473684210527
+            }
+          }
+        },
+        "ablation_engine_plus_rs": {
+          "n": 450,
+          "tp": 103,
+          "tn": 184,
+          "fp": 41,
+          "fn": 122,
+          "accuracy": 0.6377777777777778,
+          "precision": 0.7152777777777778,
+          "recall": 0.4577777777777778,
+          "specificity": 0.8177777777777778,
+          "f1": 0.5582655826558266,
+          "fpr": 0.18222222222222223,
+          "fnr": 0.5422222222222223,
+          "recall_ci95": [
+            0.3903323650034176,
+            0.5240227574399322
+          ],
+          "specificity_ci95": [
+            0.7554539089418311,
+            0.8783815357413488
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.78125
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.6764705882352942
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.6571428571428571
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.2857142857142857
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.13793103448275862
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.5263157894736842
+            }
+          }
+        },
+        "ablation_rs_plus_peak": {
+          "n": 450,
+          "tp": 89,
+          "tn": 216,
+          "fp": 9,
+          "fn": 136,
+          "accuracy": 0.6777777777777778,
+          "precision": 0.9081632653061225,
+          "recall": 0.39555555555555555,
+          "specificity": 0.96,
+          "f1": 0.5510835913312693,
+          "fpr": 0.04,
+          "fnr": 0.6044444444444445,
+          "recall_ci95": [
+            0.32882882882882886,
+            0.46227959957155795
+          ],
+          "specificity_ci95": [
+            0.9299044925397607,
+            0.9826858486341246
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 29,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 32,
+              "recall": 0.75
+            },
+            "marker_edit": {
+              "n": 34,
+              "recall": 0.6764705882352942
+            },
+            "module_patch": {
+              "n": 35,
+              "recall": 0.5428571428571428
+            },
+            "scratch": {
+              "n": 28,
+              "recall": 0.17857142857142858
+            },
+            "sticker_replacement": {
+              "n": 29,
+              "recall": 0.034482758620689655
+            },
+            "white_out": {
+              "n": 38,
+              "recall": 0.4473684210526316
+            }
+          }
+        }
+      }
+    },
+    "test_real": {
+      "n_genuine": 100,
+      "n_tampered": 34,
+      "bootstrap_unit": "pair_id (too few QR identities)",
+      "detectors": {
+        "baseline_engine": {
+          "n": 134,
+          "tp": 0,
+          "tn": 100,
+          "fp": 0,
+          "fn": 34,
+          "accuracy": 0.746268656716418,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.2537313432835821,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.0
+            }
+          }
+        },
+        "integrated_engine": {
+          "n": 134,
+          "tp": 8,
+          "tn": 99,
+          "fp": 1,
+          "fn": 26,
+          "accuracy": 0.7985074626865671,
+          "precision": 0.8888888888888888,
+          "recall": 0.23529411764705882,
+          "specificity": 0.99,
+          "f1": 0.3720930232558139,
+          "fpr": 0.01,
+          "fnr": 0.7647058823529411,
+          "roc_auc": 0.6126470588235294,
+          "pr_auc": 0.40318017754365426,
+          "recall_ci95": [
+            0.1,
+            0.3870967741935484
+          ],
+          "specificity_ci95": [
+            0.97,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.4
+            }
+          }
+        },
+        "baseline_ecc_v3m": {
+          "n": 134,
+          "tp": 0,
+          "tn": 100,
+          "fp": 0,
+          "fn": 34,
+          "accuracy": 0.746268656716418,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.2537313432835821,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.0
+            }
+          }
+        },
+        "decode_failure": {
+          "n": 134,
+          "tp": 1,
+          "tn": 47,
+          "fp": 53,
+          "fn": 33,
+          "accuracy": 0.3582089552238806,
+          "precision": 0.018518518518518517,
+          "recall": 0.029411764705882353,
+          "specificity": 0.47,
+          "f1": 0.022727272727272724,
+          "fpr": 0.53,
+          "fnr": 0.9705882352941176,
+          "roc_auc": 0.24970588235294114,
+          "pr_auc": 0.24681331902578613,
+          "recall_ci95": [
+            0.0,
+            0.09527649769585232
+          ],
+          "specificity_ci95": [
+            0.37,
+            0.57
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.0
+            }
+          }
+        },
+        "baseline_peak": {
+          "n": 134,
+          "tp": 7,
+          "tn": 78,
+          "fp": 22,
+          "fn": 27,
+          "accuracy": 0.6343283582089553,
+          "precision": 0.2413793103448276,
+          "recall": 0.20588235294117646,
+          "specificity": 0.78,
+          "f1": 0.22222222222222224,
+          "fpr": 0.22,
+          "fnr": 0.7941176470588235,
+          "roc_auc": 0.46058823529411763,
+          "pr_auc": 0.24165927635756235,
+          "recall_ci95": [
+            0.07407407407407407,
+            0.35714285714285715
+          ],
+          "specificity_ci95": [
+            0.69,
+            0.8502499999999986
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.4
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.6
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.2
+            }
+          }
+        },
+        "rs_capacity": {
+          "n": 134,
+          "tp": 8,
+          "tn": 99,
+          "fp": 1,
+          "fn": 26,
+          "accuracy": 0.7985074626865671,
+          "precision": 0.8888888888888888,
+          "recall": 0.23529411764705882,
+          "specificity": 0.99,
+          "f1": 0.3720930232558139,
+          "fpr": 0.01,
+          "fnr": 0.7647058823529411,
+          "roc_auc": 0.8638235294117647,
+          "pr_auc": 0.7209225188018429,
+          "recall_ci95": [
+            0.1,
+            0.3870967741935484
+          ],
+          "specificity_ci95": [
+            0.97,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.4
+            }
+          }
+        },
+        "resnet18": {
+          "n": 134,
+          "tp": 15,
+          "tn": 70,
+          "fp": 30,
+          "fn": 19,
+          "accuracy": 0.6343283582089553,
+          "precision": 0.3333333333333333,
+          "recall": 0.4411764705882353,
+          "specificity": 0.7,
+          "f1": 0.37974683544303794,
+          "fpr": 0.3,
+          "fnr": 0.5588235294117647,
+          "roc_auc": 0.5958823529411764,
+          "pr_auc": 0.530789126900229,
+          "recall_ci95": [
+            0.2777777777777778,
+            0.6097899728997288
+          ],
+          "specificity_ci95": [
+            0.6,
+            0.79
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.4
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 1.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.6
+            }
+          }
+        },
+        "vit_finetune": {
+          "n": 134,
+          "tp": 27,
+          "tn": 39,
+          "fp": 61,
+          "fn": 7,
+          "accuracy": 0.4925373134328358,
+          "precision": 0.3068181818181818,
+          "recall": 0.7941176470588235,
+          "specificity": 0.39,
+          "f1": 0.4426229508196722,
+          "fpr": 0.61,
+          "fnr": 0.20588235294117646,
+          "roc_auc": 0.7133823529411765,
+          "pr_auc": 0.6632221254959612,
+          "recall_ci95": [
+            0.641,
+            0.918918918918919
+          ],
+          "specificity_ci95": [
+            0.29,
+            0.49
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.8
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 1.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.8
+            }
+          }
+        },
+        "vit_probe": {
+          "n": 134,
+          "tp": 16,
+          "tn": 79,
+          "fp": 21,
+          "fn": 18,
+          "accuracy": 0.7089552238805971,
+          "precision": 0.43243243243243246,
+          "recall": 0.47058823529411764,
+          "specificity": 0.79,
+          "f1": 0.4507042253521127,
+          "fpr": 0.21,
+          "fnr": 0.5294117647058824,
+          "roc_auc": 0.6523529411764706,
+          "pr_auc": 0.4680792372748761,
+          "recall_ci95": [
+            0.30303030303030304,
+            0.6389166666666665
+          ],
+          "specificity_ci95": [
+            0.71,
+            0.86
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.6
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.4
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.5
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.4
+            }
+          }
+        },
+        "conv_ae": {
+          "n": 134,
+          "tp": 5,
+          "tn": 79,
+          "fp": 21,
+          "fn": 29,
+          "accuracy": 0.6268656716417911,
+          "precision": 0.19230769230769232,
+          "recall": 0.14705882352941177,
+          "specificity": 0.79,
+          "f1": 0.16666666666666669,
+          "fpr": 0.21,
+          "fnr": 0.8529411764705882,
+          "roc_auc": 0.4745588235294118,
+          "pr_auc": 0.2506060325658426,
+          "recall_ci95": [
+            0.03125,
+            0.27278409090909056
+          ],
+          "specificity_ci95": [
+            0.7,
+            0.87
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.25
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.2
+            }
+          }
+        },
+        "patchcore": {
+          "n": 134,
+          "tp": 7,
+          "tn": 58,
+          "fp": 42,
+          "fn": 27,
+          "accuracy": 0.48507462686567165,
+          "precision": 0.14285714285714285,
+          "recall": 0.20588235294117646,
+          "specificity": 0.58,
+          "f1": 0.1686746987951807,
+          "fpr": 0.42,
+          "fnr": 0.7941176470588235,
+          "roc_auc": 0.42632352941176466,
+          "pr_auc": 0.2125187852371825,
+          "recall_ci95": [
+            0.07497685185185185,
+            0.34486074270557016
+          ],
+          "specificity_ci95": [
+            0.49,
+            0.67
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.6
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.4
+            }
+          }
+        },
+        "baseline_peak_original": {
+          "n": 134,
+          "tp": 0,
+          "tn": 100,
+          "fp": 0,
+          "fn": 34,
+          "accuracy": 0.746268656716418,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.46058823529411763,
+          "pr_auc": 0.24165927635756235,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.0
+            }
+          }
+        },
+        "rs_capacity+baseline_peak": {
+          "n": 134,
+          "tp": 3,
+          "tn": 94,
+          "fp": 6,
+          "fn": 31,
+          "accuracy": 0.7238805970149254,
+          "precision": 0.3333333333333333,
+          "recall": 0.08823529411764706,
+          "specificity": 0.94,
+          "f1": 0.13953488372093023,
+          "fpr": 0.06,
+          "fnr": 0.9117647058823529,
+          "recall_ci95": [
+            0.0,
+            0.19047619047619047
+          ],
+          "specificity_ci95": [
+            0.89,
+            0.98
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.2
+            }
+          }
+        },
+        "rs_capacity+resnet18": {
+          "n": 134,
+          "tp": 16,
+          "tn": 80,
+          "fp": 20,
+          "fn": 18,
+          "accuracy": 0.7164179104477612,
+          "precision": 0.4444444444444444,
+          "recall": 0.47058823529411764,
+          "specificity": 0.8,
+          "f1": 0.45714285714285713,
+          "fpr": 0.2,
+          "fnr": 0.5294117647058824,
+          "recall_ci95": [
+            0.30303030303030304,
+            0.6363636363636364
+          ],
+          "specificity_ci95": [
+            0.72,
+            0.88
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.4
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.4
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 1.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.6
+            }
+          }
+        },
+        "rs_capacity+baseline_peak+resnet18": {
+          "n": 134,
+          "tp": 15,
+          "tn": 88,
+          "fp": 12,
+          "fn": 19,
+          "accuracy": 0.7686567164179104,
+          "precision": 0.5555555555555556,
+          "recall": 0.4411764705882353,
+          "specificity": 0.88,
+          "f1": 0.49180327868852464,
+          "fpr": 0.12,
+          "fnr": 0.5588235294117647,
+          "recall_ci95": [
+            0.2727272727272727,
+            0.6060606060606061
+          ],
+          "specificity_ci95": [
+            0.81,
+            0.94
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.4
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.4
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 1.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.4
+            }
+          }
+        },
+        "ablation_engine_plus_rs": {
+          "n": 134,
+          "tp": 8,
+          "tn": 99,
+          "fp": 1,
+          "fn": 26,
+          "accuracy": 0.7985074626865671,
+          "precision": 0.8888888888888888,
+          "recall": 0.23529411764705882,
+          "specificity": 0.99,
+          "f1": 0.3720930232558139,
+          "fpr": 0.01,
+          "fnr": 0.7647058823529411,
+          "recall_ci95": [
+            0.1,
+            0.3870967741935484
+          ],
+          "specificity_ci95": [
+            0.97,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.4
+            }
+          }
+        },
+        "ablation_rs_plus_peak": {
+          "n": 134,
+          "tp": 8,
+          "tn": 99,
+          "fp": 1,
+          "fn": 26,
+          "accuracy": 0.7985074626865671,
+          "precision": 0.8888888888888888,
+          "recall": 0.23529411764705882,
+          "specificity": 0.99,
+          "f1": 0.3720930232558139,
+          "fpr": 0.01,
+          "fnr": 0.7647058823529411,
+          "recall_ci95": [
+            0.1,
+            0.3870967741935484
+          ],
+          "specificity_ci95": [
+            0.97,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 5,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 5,
+              "recall": 0.2
+            },
+            "module_patch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 5,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 4,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 5,
+              "recall": 0.4
+            }
+          }
+        }
+      }
+    },
+    "test_external": {
+      "n_genuine": 98,
+      "n_tampered": 76,
+      "bootstrap_unit": "group_id",
+      "detectors": {
+        "baseline_engine": {
+          "n": 174,
+          "tp": 0,
+          "tn": 98,
+          "fp": 0,
+          "fn": 76,
+          "accuracy": 0.5632183908045977,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.4367816091954023,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.0
+            }
+          }
+        },
+        "integrated_engine": {
+          "n": 174,
+          "tp": 34,
+          "tn": 88,
+          "fp": 10,
+          "fn": 42,
+          "accuracy": 0.7011494252873564,
+          "precision": 0.7727272727272727,
+          "recall": 0.4473684210526316,
+          "specificity": 0.8979591836734694,
+          "f1": 0.5666666666666667,
+          "fpr": 0.10204081632653061,
+          "fnr": 0.5526315789473685,
+          "roc_auc": 0.6726638023630506,
+          "pr_auc": 0.5870730902491338,
+          "recall_ci95": [
+            0.33766233766233766,
+            0.5540540540540541
+          ],
+          "specificity_ci95": [
+            0.8051948051948052,
+            0.9591836734693877
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.1
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.45454545454545453
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.45454545454545453
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.5454545454545454
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.8181818181818182
+            }
+          }
+        },
+        "baseline_ecc_v3m": {
+          "n": 174,
+          "tp": 0,
+          "tn": 98,
+          "fp": 0,
+          "fn": 76,
+          "accuracy": 0.5632183908045977,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.4367816091954023,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.0
+            }
+          }
+        },
+        "decode_failure": {
+          "n": 174,
+          "tp": 16,
+          "tn": 81,
+          "fp": 17,
+          "fn": 60,
+          "accuracy": 0.5574712643678161,
+          "precision": 0.48484848484848486,
+          "recall": 0.21052631578947367,
+          "specificity": 0.826530612244898,
+          "f1": 0.29357798165137616,
+          "fpr": 0.17346938775510204,
+          "fnr": 0.7894736842105263,
+          "roc_auc": 0.5185284640171858,
+          "pr_auc": 0.44690095143815656,
+          "recall_ci95": [
+            0.11996052631578948,
+            0.3026315789473684
+          ],
+          "specificity_ci95": [
+            0.6571428571428571,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.1
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.5454545454545454
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.5454545454545454
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.18181818181818182
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.09090909090909091
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.0
+            }
+          }
+        },
+        "baseline_peak": {
+          "n": 174,
+          "tp": 0,
+          "tn": 98,
+          "fp": 0,
+          "fn": 76,
+          "accuracy": 0.5632183908045977,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.46240601503759404,
+          "pr_auc": 0.42547654234207744,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.0
+            }
+          }
+        },
+        "rs_capacity": {
+          "n": 174,
+          "tp": 34,
+          "tn": 88,
+          "fp": 10,
+          "fn": 42,
+          "accuracy": 0.7011494252873564,
+          "precision": 0.7727272727272727,
+          "recall": 0.4473684210526316,
+          "specificity": 0.8979591836734694,
+          "f1": 0.5666666666666667,
+          "fpr": 0.10204081632653061,
+          "fnr": 0.5526315789473685,
+          "roc_auc": 0.6045247046186896,
+          "pr_auc": 0.6220096476875595,
+          "recall_ci95": [
+            0.33766233766233766,
+            0.5540540540540541
+          ],
+          "specificity_ci95": [
+            0.8051948051948052,
+            0.9591836734693877
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.1
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.45454545454545453
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.45454545454545453
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.5454545454545454
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.8181818181818182
+            }
+          }
+        },
+        "resnet18": {
+          "n": 174,
+          "tp": 65,
+          "tn": 20,
+          "fp": 78,
+          "fn": 11,
+          "accuracy": 0.4885057471264368,
+          "precision": 0.45454545454545453,
+          "recall": 0.8552631578947368,
+          "specificity": 0.20408163265306123,
+          "f1": 0.5936073059360731,
+          "fpr": 0.7959183673469388,
+          "fnr": 0.14473684210526316,
+          "roc_auc": 0.7526181525241675,
+          "pr_auc": 0.7785620410811327,
+          "recall_ci95": [
+            0.7733333333333333,
+            0.9333333333333333
+          ],
+          "specificity_ci95": [
+            0.07792207792207792,
+            0.3025210084033613
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.3
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.9090909090909091
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 1.0
+            }
+          }
+        },
+        "vit_finetune": {
+          "n": 174,
+          "tp": 66,
+          "tn": 25,
+          "fp": 73,
+          "fn": 10,
+          "accuracy": 0.5229885057471264,
+          "precision": 0.4748201438848921,
+          "recall": 0.868421052631579,
+          "specificity": 0.25510204081632654,
+          "f1": 0.613953488372093,
+          "fpr": 0.7448979591836735,
+          "fnr": 0.13157894736842105,
+          "roc_auc": 0.8176020408163265,
+          "pr_auc": 0.86643398405226,
+          "recall_ci95": [
+            0.7866666666666666,
+            0.935064935064935
+          ],
+          "specificity_ci95": [
+            0.12987012987012986,
+            0.34782608695652173
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.3
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 1.0
+            }
+          }
+        },
+        "vit_probe": {
+          "n": 174,
+          "tp": 40,
+          "tn": 65,
+          "fp": 33,
+          "fn": 36,
+          "accuracy": 0.603448275862069,
+          "precision": 0.547945205479452,
+          "recall": 0.5263157894736842,
+          "specificity": 0.6632653061224489,
+          "f1": 0.5369127516778524,
+          "fpr": 0.336734693877551,
+          "fnr": 0.47368421052631576,
+          "roc_auc": 0.6098281417830289,
+          "pr_auc": 0.5946652762466083,
+          "recall_ci95": [
+            0.40789473684210525,
+            0.6363636363636364
+          ],
+          "specificity_ci95": [
+            0.5612244897959183,
+            0.7448979591836735
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.2
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.6363636363636364
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.5454545454545454
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.8181818181818182
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.36363636363636365
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.36363636363636365
+            }
+          }
+        },
+        "conv_ae": {
+          "n": 174,
+          "tp": 1,
+          "tn": 97,
+          "fp": 1,
+          "fn": 75,
+          "accuracy": 0.5632183908045977,
+          "precision": 0.5,
+          "recall": 0.013157894736842105,
+          "specificity": 0.9897959183673469,
+          "f1": 0.025641025641025637,
+          "fpr": 0.01020408163265306,
+          "fnr": 0.9868421052631579,
+          "roc_auc": 0.5081229860365198,
+          "pr_auc": 0.4782351970981161,
+          "recall_ci95": [
+            0.0,
+            0.04
+          ],
+          "specificity_ci95": [
+            0.961038961038961,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.09090909090909091
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.0
+            }
+          }
+        },
+        "patchcore": {
+          "n": 174,
+          "tp": 32,
+          "tn": 56,
+          "fp": 42,
+          "fn": 44,
+          "accuracy": 0.5057471264367817,
+          "precision": 0.43243243243243246,
+          "recall": 0.42105263157894735,
+          "specificity": 0.5714285714285714,
+          "f1": 0.4266666666666667,
+          "fpr": 0.42857142857142855,
+          "fnr": 0.5789473684210527,
+          "roc_auc": 0.4857008592910848,
+          "pr_auc": 0.4304080976633213,
+          "recall_ci95": [
+            0.3026315789473684,
+            0.5394736842105263
+          ],
+          "specificity_ci95": [
+            0.44155844155844154,
+            0.6632653061224489
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.1
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.36363636363636365
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.18181818181818182
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.5454545454545454
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.6363636363636364
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.36363636363636365
+            }
+          }
+        },
+        "baseline_peak_original": {
+          "n": 174,
+          "tp": 0,
+          "tn": 98,
+          "fp": 0,
+          "fn": 76,
+          "accuracy": 0.5632183908045977,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.46240601503759404,
+          "pr_auc": 0.42547654234207744,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.0
+            }
+          }
+        },
+        "rs_capacity+baseline_peak": {
+          "n": 174,
+          "tp": 22,
+          "tn": 93,
+          "fp": 5,
+          "fn": 54,
+          "accuracy": 0.6609195402298851,
+          "precision": 0.8148148148148148,
+          "recall": 0.2894736842105263,
+          "specificity": 0.9489795918367347,
+          "f1": 0.4271844660194175,
+          "fpr": 0.05102040816326531,
+          "fnr": 0.7105263157894737,
+          "recall_ci95": [
+            0.1891891891891892,
+            0.3919630156472258
+          ],
+          "specificity_ci95": [
+            0.887639146567718,
+            0.9897959183673469
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.0
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.45454545454545453
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.18181818181818182
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.6363636363636364
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.09090909090909091
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.6363636363636364
+            }
+          }
+        },
+        "rs_capacity+resnet18": {
+          "n": 174,
+          "tp": 64,
+          "tn": 26,
+          "fp": 72,
+          "fn": 12,
+          "accuracy": 0.5172413793103449,
+          "precision": 0.47058823529411764,
+          "recall": 0.8421052631578947,
+          "specificity": 0.2653061224489796,
+          "f1": 0.6037735849056604,
+          "fpr": 0.7346938775510204,
+          "fnr": 0.15789473684210525,
+          "recall_ci95": [
+            0.7532467532467533,
+            0.9210526315789473
+          ],
+          "specificity_ci95": [
+            0.14285714285714285,
+            0.35411490683229774
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.3
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.9090909090909091
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.9090909090909091
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 1.0
+            }
+          }
+        },
+        "rs_capacity+baseline_peak+resnet18": {
+          "n": 174,
+          "tp": 62,
+          "tn": 51,
+          "fp": 47,
+          "fn": 14,
+          "accuracy": 0.6494252873563219,
+          "precision": 0.5688073394495413,
+          "recall": 0.8157894736842105,
+          "specificity": 0.5204081632653061,
+          "f1": 0.6702702702702703,
+          "fpr": 0.47959183673469385,
+          "fnr": 0.18421052631578946,
+          "recall_ci95": [
+            0.7236842105263158,
+            0.8961038961038961
+          ],
+          "specificity_ci95": [
+            0.4025974025974026,
+            0.6050945378151257
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.3
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 1.0
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.8181818181818182
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.9090909090909091
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.9090909090909091
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 1.0
+            }
+          }
+        },
+        "ablation_engine_plus_rs": {
+          "n": 174,
+          "tp": 34,
+          "tn": 88,
+          "fp": 10,
+          "fn": 42,
+          "accuracy": 0.7011494252873564,
+          "precision": 0.7727272727272727,
+          "recall": 0.4473684210526316,
+          "specificity": 0.8979591836734694,
+          "f1": 0.5666666666666667,
+          "fpr": 0.10204081632653061,
+          "fnr": 0.5526315789473685,
+          "recall_ci95": [
+            0.33766233766233766,
+            0.5540540540540541
+          ],
+          "specificity_ci95": [
+            0.8051948051948052,
+            0.9591836734693877
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.1
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.45454545454545453
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.45454545454545453
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.5454545454545454
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.8181818181818182
+            }
+          }
+        },
+        "ablation_rs_plus_peak": {
+          "n": 174,
+          "tp": 34,
+          "tn": 88,
+          "fp": 10,
+          "fn": 42,
+          "accuracy": 0.7011494252873564,
+          "precision": 0.7727272727272727,
+          "recall": 0.4473684210526316,
+          "specificity": 0.8979591836734694,
+          "f1": 0.5666666666666667,
+          "fpr": 0.10204081632653061,
+          "fnr": 0.5526315789473685,
+          "recall_ci95": [
+            0.33766233766233766,
+            0.5540540540540541
+          ],
+          "specificity_ci95": [
+            0.8051948051948052,
+            0.9591836734693877
+          ],
+          "per_category_recall": {
+            "finder_alteration": {
+              "n": 10,
+              "recall": 0.1
+            },
+            "label_overlay": {
+              "n": 11,
+              "recall": 0.45454545454545453
+            },
+            "marker_edit": {
+              "n": 11,
+              "recall": 0.45454545454545453
+            },
+            "module_patch": {
+              "n": 11,
+              "recall": 0.7272727272727273
+            },
+            "scratch": {
+              "n": 11,
+              "recall": 0.5454545454545454
+            },
+            "sticker_replacement": {
+              "n": 11,
+              "recall": 0.0
+            },
+            "white_out": {
+              "n": 11,
+              "recall": 0.8181818181818182
+            }
+          }
+        }
+      }
+    },
+    "legacy_val": {
+      "n_genuine": 15,
+      "n_tampered": 15,
+      "bootstrap_unit": "pair_id (too few QR identities)",
+      "detectors": {
+        "baseline_engine": {
+          "n": 30,
+          "tp": 2,
+          "tn": 15,
+          "fp": 0,
+          "fn": 13,
+          "accuracy": 0.5666666666666667,
+          "precision": 1.0,
+          "recall": 0.13333333333333333,
+          "specificity": 1.0,
+          "f1": 0.23529411764705882,
+          "fpr": 0.0,
+          "fnr": 0.8666666666666667,
+          "roc_auc": 0.5666666666666667,
+          "pr_auc": 0.5666666666666667,
+          "recall_ci95": [
+            0.0,
+            0.3333333333333333
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.13333333333333333
+            }
+          }
+        },
+        "integrated_engine": {
+          "n": 30,
+          "tp": 2,
+          "tn": 15,
+          "fp": 0,
+          "fn": 13,
+          "accuracy": 0.5666666666666667,
+          "precision": 1.0,
+          "recall": 0.13333333333333333,
+          "specificity": 1.0,
+          "f1": 0.23529411764705882,
+          "fpr": 0.0,
+          "fnr": 0.8666666666666667,
+          "roc_auc": 0.5666666666666667,
+          "pr_auc": 0.5666666666666667,
+          "recall_ci95": [
+            0.0,
+            0.3333333333333333
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.13333333333333333
+            }
+          }
+        },
+        "baseline_ecc_v3m": {
+          "n": 30,
+          "tp": 1,
+          "tn": 15,
+          "fp": 0,
+          "fn": 14,
+          "accuracy": 0.5333333333333333,
+          "precision": 1.0,
+          "recall": 0.06666666666666667,
+          "specificity": 1.0,
+          "f1": 0.125,
+          "fpr": 0.0,
+          "fnr": 0.9333333333333333,
+          "roc_auc": 0.5333333333333333,
+          "pr_auc": 0.5333333333333333,
+          "recall_ci95": [
+            0.0,
+            0.2
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.06666666666666667
+            }
+          }
+        },
+        "decode_failure": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.5,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "baseline_peak": {
+          "n": 30,
+          "tp": 15,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0,
+          "accuracy": 0.5,
+          "precision": 0.5,
+          "recall": 1.0,
+          "specificity": 0.0,
+          "f1": 0.6666666666666666,
+          "fpr": 1.0,
+          "fnr": 0.0,
+          "roc_auc": 0.5177777777777778,
+          "pr_auc": 0.5333333333333333,
+          "recall_ci95": [
+            1.0,
+            1.0
+          ],
+          "specificity_ci95": [
+            0.0,
+            0.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 1.0
+            }
+          }
+        },
+        "rs_capacity": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.5,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "resnet18": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5044444444444445,
+          "pr_auc": 0.5520918374599026,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "vit_finetune": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5111111111111111,
+          "pr_auc": 0.5527736960396806,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "vit_probe": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5244444444444444,
+          "pr_auc": 0.5754169641274904,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "conv_ae": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.49777777777777776,
+          "pr_auc": 0.5160976190302703,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "patchcore": {
+          "n": 30,
+          "tp": 15,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0,
+          "accuracy": 0.5,
+          "precision": 0.5,
+          "recall": 1.0,
+          "specificity": 0.0,
+          "f1": 0.6666666666666666,
+          "fpr": 1.0,
+          "fnr": 0.0,
+          "roc_auc": 0.48,
+          "pr_auc": 0.5013239114474812,
+          "recall_ci95": [
+            1.0,
+            1.0
+          ],
+          "specificity_ci95": [
+            0.0,
+            0.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 1.0
+            }
+          }
+        },
+        "baseline_peak_original": {
+          "n": 30,
+          "tp": 1,
+          "tn": 15,
+          "fp": 0,
+          "fn": 14,
+          "accuracy": 0.5333333333333333,
+          "precision": 1.0,
+          "recall": 0.06666666666666667,
+          "specificity": 1.0,
+          "f1": 0.125,
+          "fpr": 0.0,
+          "fnr": 0.9333333333333333,
+          "roc_auc": 0.5177777777777778,
+          "pr_auc": 0.5333333333333333,
+          "recall_ci95": [
+            0.0,
+            0.2
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.06666666666666667
+            }
+          }
+        },
+        "rs_capacity+baseline_peak": {
+          "n": 30,
+          "tp": 15,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0,
+          "accuracy": 0.5,
+          "precision": 0.5,
+          "recall": 1.0,
+          "specificity": 0.0,
+          "f1": 0.6666666666666666,
+          "fpr": 1.0,
+          "fnr": 0.0,
+          "recall_ci95": [
+            1.0,
+            1.0
+          ],
+          "specificity_ci95": [
+            0.0,
+            0.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 1.0
+            }
+          }
+        },
+        "rs_capacity+resnet18": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "rs_capacity+baseline_peak+resnet18": {
+          "n": 30,
+          "tp": 15,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0,
+          "accuracy": 0.5,
+          "precision": 0.5,
+          "recall": 1.0,
+          "specificity": 0.0,
+          "f1": 0.6666666666666666,
+          "fpr": 1.0,
+          "fnr": 0.0,
+          "recall_ci95": [
+            1.0,
+            1.0
+          ],
+          "specificity_ci95": [
+            0.0,
+            0.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 1.0
+            }
+          }
+        },
+        "ablation_engine_plus_rs": {
+          "n": 30,
+          "tp": 2,
+          "tn": 15,
+          "fp": 0,
+          "fn": 13,
+          "accuracy": 0.5666666666666667,
+          "precision": 1.0,
+          "recall": 0.13333333333333333,
+          "specificity": 1.0,
+          "f1": 0.23529411764705882,
+          "fpr": 0.0,
+          "fnr": 0.8666666666666667,
+          "recall_ci95": [
+            0.0,
+            0.3333333333333333
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.13333333333333333
+            }
+          }
+        },
+        "ablation_rs_plus_peak": {
+          "n": 30,
+          "tp": 1,
+          "tn": 15,
+          "fp": 0,
+          "fn": 14,
+          "accuracy": 0.5333333333333333,
+          "precision": 1.0,
+          "recall": 0.06666666666666667,
+          "specificity": 1.0,
+          "f1": 0.125,
+          "fpr": 0.0,
+          "fnr": 0.9333333333333333,
+          "recall_ci95": [
+            0.0,
+            0.2
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.06666666666666667
+            }
+          }
+        }
+      }
+    },
+    "legacy_test": {
+      "n_genuine": 15,
+      "n_tampered": 15,
+      "bootstrap_unit": "pair_id (too few QR identities)",
+      "detectors": {
+        "baseline_engine": {
+          "n": 30,
+          "tp": 2,
+          "tn": 15,
+          "fp": 0,
+          "fn": 13,
+          "accuracy": 0.5666666666666667,
+          "precision": 1.0,
+          "recall": 0.13333333333333333,
+          "specificity": 1.0,
+          "f1": 0.23529411764705882,
+          "fpr": 0.0,
+          "fnr": 0.8666666666666667,
+          "roc_auc": 0.5666666666666667,
+          "pr_auc": 0.5666666666666667,
+          "recall_ci95": [
+            0.0,
+            0.3333333333333333
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.13333333333333333
+            }
+          }
+        },
+        "integrated_engine": {
+          "n": 30,
+          "tp": 2,
+          "tn": 15,
+          "fp": 0,
+          "fn": 13,
+          "accuracy": 0.5666666666666667,
+          "precision": 1.0,
+          "recall": 0.13333333333333333,
+          "specificity": 1.0,
+          "f1": 0.23529411764705882,
+          "fpr": 0.0,
+          "fnr": 0.8666666666666667,
+          "roc_auc": 0.5666666666666667,
+          "pr_auc": 0.5666666666666667,
+          "recall_ci95": [
+            0.0,
+            0.3333333333333333
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.13333333333333333
+            }
+          }
+        },
+        "baseline_ecc_v3m": {
+          "n": 30,
+          "tp": 2,
+          "tn": 15,
+          "fp": 0,
+          "fn": 13,
+          "accuracy": 0.5666666666666667,
+          "precision": 1.0,
+          "recall": 0.13333333333333333,
+          "specificity": 1.0,
+          "f1": 0.23529411764705882,
+          "fpr": 0.0,
+          "fnr": 0.8666666666666667,
+          "roc_auc": 0.5666666666666667,
+          "pr_auc": 0.5666666666666667,
+          "recall_ci95": [
+            0.0,
+            0.3333333333333333
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.13333333333333333
+            }
+          }
+        },
+        "decode_failure": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.5,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "baseline_peak": {
+          "n": 30,
+          "tp": 15,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0,
+          "accuracy": 0.5,
+          "precision": 0.5,
+          "recall": 1.0,
+          "specificity": 0.0,
+          "f1": 0.6666666666666666,
+          "fpr": 1.0,
+          "fnr": 0.0,
+          "roc_auc": 0.5755555555555555,
+          "pr_auc": 0.5888888888888889,
+          "recall_ci95": [
+            1.0,
+            1.0
+          ],
+          "specificity_ci95": [
+            0.0,
+            0.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 1.0
+            }
+          }
+        },
+        "rs_capacity": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.5,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "resnet18": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.4955555555555555,
+          "pr_auc": 0.49503621130219594,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "vit_finetune": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5422222222222223,
+          "pr_auc": 0.5910961309222178,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "vit_probe": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.5422222222222222,
+          "pr_auc": 0.5861471905001316,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "conv_ae": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "roc_auc": 0.4933333333333333,
+          "pr_auc": 0.5503839931885909,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "patchcore": {
+          "n": 30,
+          "tp": 15,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0,
+          "accuracy": 0.5,
+          "precision": 0.5,
+          "recall": 1.0,
+          "specificity": 0.0,
+          "f1": 0.6666666666666666,
+          "fpr": 1.0,
+          "fnr": 0.0,
+          "roc_auc": 0.52,
+          "pr_auc": 0.5406316519127605,
+          "recall_ci95": [
+            1.0,
+            1.0
+          ],
+          "specificity_ci95": [
+            0.0,
+            0.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 1.0
+            }
+          }
+        },
+        "baseline_peak_original": {
+          "n": 30,
+          "tp": 2,
+          "tn": 15,
+          "fp": 0,
+          "fn": 13,
+          "accuracy": 0.5666666666666667,
+          "precision": 1.0,
+          "recall": 0.13333333333333333,
+          "specificity": 1.0,
+          "f1": 0.23529411764705882,
+          "fpr": 0.0,
+          "fnr": 0.8666666666666667,
+          "roc_auc": 0.5755555555555555,
+          "pr_auc": 0.5888888888888889,
+          "recall_ci95": [
+            0.0,
+            0.3333333333333333
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.13333333333333333
+            }
+          }
+        },
+        "rs_capacity+baseline_peak": {
+          "n": 30,
+          "tp": 15,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0,
+          "accuracy": 0.5,
+          "precision": 0.5,
+          "recall": 1.0,
+          "specificity": 0.0,
+          "f1": 0.6666666666666666,
+          "fpr": 1.0,
+          "fnr": 0.0,
+          "recall_ci95": [
+            1.0,
+            1.0
+          ],
+          "specificity_ci95": [
+            0.0,
+            0.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 1.0
+            }
+          }
+        },
+        "rs_capacity+resnet18": {
+          "n": 30,
+          "tp": 0,
+          "tn": 15,
+          "fp": 0,
+          "fn": 15,
+          "accuracy": 0.5,
+          "precision": NaN,
+          "recall": 0.0,
+          "specificity": 1.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "fnr": 1.0,
+          "recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.0
+            }
+          }
+        },
+        "rs_capacity+baseline_peak+resnet18": {
+          "n": 30,
+          "tp": 15,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0,
+          "accuracy": 0.5,
+          "precision": 0.5,
+          "recall": 1.0,
+          "specificity": 0.0,
+          "f1": 0.6666666666666666,
+          "fpr": 1.0,
+          "fnr": 0.0,
+          "recall_ci95": [
+            1.0,
+            1.0
+          ],
+          "specificity_ci95": [
+            0.0,
+            0.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 1.0
+            }
+          }
+        },
+        "ablation_engine_plus_rs": {
+          "n": 30,
+          "tp": 2,
+          "tn": 15,
+          "fp": 0,
+          "fn": 13,
+          "accuracy": 0.5666666666666667,
+          "precision": 1.0,
+          "recall": 0.13333333333333333,
+          "specificity": 1.0,
+          "f1": 0.23529411764705882,
+          "fpr": 0.0,
+          "fnr": 0.8666666666666667,
+          "recall_ci95": [
+            0.0,
+            0.3333333333333333
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.13333333333333333
+            }
+          }
+        },
+        "ablation_rs_plus_peak": {
+          "n": 30,
+          "tp": 2,
+          "tn": 15,
+          "fp": 0,
+          "fn": 13,
+          "accuracy": 0.5666666666666667,
+          "precision": 1.0,
+          "recall": 0.13333333333333333,
+          "specificity": 1.0,
+          "f1": 0.23529411764705882,
+          "fpr": 0.0,
+          "fnr": 0.8666666666666667,
+          "recall_ci95": [
+            0.0,
+            0.3333333333333333
+          ],
+          "specificity_ci95": [
+            1.0,
+            1.0
+          ],
+          "per_category_recall": {
+            "legacy_synthetic": {
+              "n": 15,
+              "recall": 0.13333333333333333
+            }
+          }
+        }
+      }
+    }
+  },
+  "paired_vs_baseline": {
+    "val": {
+      "integrated_engine": {
+        "recall_gain": 0.26666666666666666,
+        "ci95": [
+          0.20790710407446278,
+          0.32850581751377833
+        ]
+      },
+      "baseline_ecc_v3m": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "decode_failure": {
+        "recall_gain": 0.15238095238095237,
+        "ci95": [
+          0.08172099282296649,
+          0.22167487684729065
+        ]
+      },
+      "baseline_peak": {
+        "recall_gain": -0.01904761904761905,
+        "ci95": [
+          -0.06542823921723488,
+          0.02715240641711229
+        ]
+      },
+      "rs_capacity": {
+        "recall_gain": 0.2285714285714286,
+        "ci95": [
+          0.15886693809567876,
+          0.3015170190575519
+        ]
+      },
+      "resnet18": {
+        "recall_gain": 0.4809523809523809,
+        "ci95": [
+          0.4084507042253521,
+          0.5540169918594132
+        ]
+      },
+      "vit_finetune": {
+        "recall_gain": 0.49523809523809526,
+        "ci95": [
+          0.4245248504371837,
+          0.5674450031426775
+        ]
+      },
+      "vit_probe": {
+        "recall_gain": 0.28095238095238095,
+        "ci95": [
+          0.20097980579791727,
+          0.35784313725490197
+        ]
+      },
+      "conv_ae": {
+        "recall_gain": -0.004761904761904766,
+        "ci95": [
+          -0.052387218045112774,
+          0.0430673767022451
+        ]
+      },
+      "patchcore": {
+        "recall_gain": 0.0,
+        "ci95": [
+          -0.047619047619047616,
+          0.04830917874396136
+        ]
+      },
+      "baseline_peak_original": {
+        "recall_gain": -0.06190476190476191,
+        "ci95": [
+          -0.10097373188405798,
+          -0.02857142857142857
+        ]
+      },
+      "rs_capacity+baseline_peak": {
+        "recall_gain": 0.15238095238095237,
+        "ci95": [
+          0.08291787872007163,
+          0.22222222222222224
+        ]
+      },
+      "rs_capacity+resnet18": {
+        "recall_gain": 0.5380952380952381,
+        "ci95": [
+          0.4653378712871288,
+          0.6105902777777777
+        ]
+      },
+      "rs_capacity+baseline_peak+resnet18": {
+        "recall_gain": 0.5,
+        "ci95": [
+          0.42653854195706714,
+          0.5700945151604854
+        ]
+      },
+      "ablation_engine_plus_rs": {
+        "recall_gain": 0.2619047619047619,
+        "ci95": [
+          0.2037914691943128,
+          0.32547444054409824
+        ]
+      },
+      "ablation_rs_plus_peak": {
+        "recall_gain": 0.2285714285714286,
+        "ci95": [
+          0.15886693809567876,
+          0.3015170190575519
+        ]
+      }
+    },
+    "test_synthetic": {
+      "integrated_engine": {
+        "recall_gain": 0.30666666666666664,
+        "ci95": [
+          0.24090488215488215,
+          0.37392645087148046
+        ]
+      },
+      "baseline_ecc_v3m": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "decode_failure": {
+        "recall_gain": 0.022222222222222227,
+        "ci95": [
+          -0.048045514879864575,
+          0.09333333333333334
+        ]
+      },
+      "baseline_peak": {
+        "recall_gain": -0.07111111111111111,
+        "ci95": [
+          -0.14285714285714285,
+          -0.004424778761061954
+        ]
+      },
+      "rs_capacity": {
+        "recall_gain": 0.24444444444444444,
+        "ci95": [
+          0.1644879710453481,
+          0.3245869033047734
+        ]
+      },
+      "resnet18": {
+        "recall_gain": 0.40888888888888897,
+        "ci95": [
+          0.3150684931506849,
+          0.5066681614349775
+        ]
+      },
+      "vit_finetune": {
+        "recall_gain": 0.4444444444444444,
+        "ci95": [
+          0.36086070162343714,
+          0.5315315315315315
+        ]
+      },
+      "vit_probe": {
+        "recall_gain": 0.2533333333333333,
+        "ci95": [
+          0.16227773826458036,
+          0.3480327769470153
+        ]
+      },
+      "conv_ae": {
+        "recall_gain": -0.10666666666666666,
+        "ci95": [
+          -0.17273809523809525,
+          -0.04867256637168142
+        ]
+      },
+      "patchcore": {
+        "recall_gain": -0.08444444444444445,
+        "ci95": [
+          -0.1527792940320233,
+          -0.02183406113537119
+        ]
+      },
+      "baseline_peak_original": {
+        "recall_gain": -0.1511111111111111,
+        "ci95": [
+          -0.2088939393939394,
+          -0.1
+        ]
+      },
+      "rs_capacity+baseline_peak": {
+        "recall_gain": 0.14222222222222222,
+        "ci95": [
+          0.0625,
+          0.21930906301628506
+        ]
+      },
+      "rs_capacity+resnet18": {
+        "recall_gain": 0.48888888888888893,
+        "ci95": [
+          0.4008185874168179,
+          0.5746606334841629
+        ]
+      },
+      "rs_capacity+baseline_peak+resnet18": {
+        "recall_gain": 0.45333333333333337,
+        "ci95": [
+          0.368421052631579,
+          0.5398230088495575
+        ]
+      },
+      "ablation_engine_plus_rs": {
+        "recall_gain": 0.30666666666666664,
+        "ci95": [
+          0.24090488215488215,
+          0.37392645087148046
+        ]
+      },
+      "ablation_rs_plus_peak": {
+        "recall_gain": 0.24444444444444444,
+        "ci95": [
+          0.1644879710453481,
+          0.3245869033047734
+        ]
+      }
+    },
+    "test_real": {
+      "integrated_engine": {
+        "recall_gain": 0.23529411764705882,
+        "ci95": [
+          0.11764705882352941,
+          0.38235294117647056
+        ]
+      },
+      "baseline_ecc_v3m": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "decode_failure": {
+        "recall_gain": 0.029411764705882353,
+        "ci95": [
+          0.0,
+          0.08823529411764706
+        ]
+      },
+      "baseline_peak": {
+        "recall_gain": 0.20588235294117646,
+        "ci95": [
+          0.08823529411764706,
+          0.35294117647058826
+        ]
+      },
+      "rs_capacity": {
+        "recall_gain": 0.23529411764705882,
+        "ci95": [
+          0.11764705882352941,
+          0.38235294117647056
+        ]
+      },
+      "resnet18": {
+        "recall_gain": 0.4411764705882353,
+        "ci95": [
+          0.29411764705882354,
+          0.6176470588235294
+        ]
+      },
+      "vit_finetune": {
+        "recall_gain": 0.7941176470588235,
+        "ci95": [
+          0.6470588235294118,
+          0.9117647058823529
+        ]
+      },
+      "vit_probe": {
+        "recall_gain": 0.47058823529411764,
+        "ci95": [
+          0.29411764705882354,
+          0.6470588235294118
+        ]
+      },
+      "conv_ae": {
+        "recall_gain": 0.14705882352941177,
+        "ci95": [
+          0.029411764705882353,
+          0.2647058823529412
+        ]
+      },
+      "patchcore": {
+        "recall_gain": 0.20588235294117646,
+        "ci95": [
+          0.08823529411764706,
+          0.3235294117647059
+        ]
+      },
+      "baseline_peak_original": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "rs_capacity+baseline_peak": {
+        "recall_gain": 0.08823529411764706,
+        "ci95": [
+          0.0,
+          0.17647058823529413
+        ]
+      },
+      "rs_capacity+resnet18": {
+        "recall_gain": 0.47058823529411764,
+        "ci95": [
+          0.29411764705882354,
+          0.6470588235294118
+        ]
+      },
+      "rs_capacity+baseline_peak+resnet18": {
+        "recall_gain": 0.4411764705882353,
+        "ci95": [
+          0.2647058823529412,
+          0.6176470588235294
+        ]
+      },
+      "ablation_engine_plus_rs": {
+        "recall_gain": 0.23529411764705882,
+        "ci95": [
+          0.11764705882352941,
+          0.38235294117647056
+        ]
+      },
+      "ablation_rs_plus_peak": {
+        "recall_gain": 0.23529411764705882,
+        "ci95": [
+          0.11764705882352941,
+          0.38235294117647056
+        ]
+      }
+    },
+    "test_external": {
+      "integrated_engine": {
+        "recall_gain": 0.4473684210526316,
+        "ci95": [
+          0.34210526315789475,
+          0.5526315789473685
+        ]
+      },
+      "baseline_ecc_v3m": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "decode_failure": {
+        "recall_gain": 0.21052631578947367,
+        "ci95": [
+          0.11842105263157894,
+          0.3026315789473684
+        ]
+      },
+      "baseline_peak": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "rs_capacity": {
+        "recall_gain": 0.4473684210526316,
+        "ci95": [
+          0.34210526315789475,
+          0.5526315789473685
+        ]
+      },
+      "resnet18": {
+        "recall_gain": 0.8552631578947368,
+        "ci95": [
+          0.7763157894736842,
+          0.9342105263157895
+        ]
+      },
+      "vit_finetune": {
+        "recall_gain": 0.868421052631579,
+        "ci95": [
+          0.7894736842105263,
+          0.9473684210526315
+        ]
+      },
+      "vit_probe": {
+        "recall_gain": 0.5263157894736842,
+        "ci95": [
+          0.42105263157894735,
+          0.6447368421052632
+        ]
+      },
+      "conv_ae": {
+        "recall_gain": 0.013157894736842105,
+        "ci95": [
+          0.0,
+          0.039473684210526314
+        ]
+      },
+      "patchcore": {
+        "recall_gain": 0.42105263157894735,
+        "ci95": [
+          0.3157894736842105,
+          0.5263157894736842
+        ]
+      },
+      "baseline_peak_original": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "rs_capacity+baseline_peak": {
+        "recall_gain": 0.2894736842105263,
+        "ci95": [
+          0.19736842105263158,
+          0.38190789473684034
+        ]
+      },
+      "rs_capacity+resnet18": {
+        "recall_gain": 0.8421052631578947,
+        "ci95": [
+          0.75,
+          0.9210526315789473
+        ]
+      },
+      "rs_capacity+baseline_peak+resnet18": {
+        "recall_gain": 0.8157894736842105,
+        "ci95": [
+          0.7236842105263158,
+          0.8947368421052632
+        ]
+      },
+      "ablation_engine_plus_rs": {
+        "recall_gain": 0.4473684210526316,
+        "ci95": [
+          0.34210526315789475,
+          0.5526315789473685
+        ]
+      },
+      "ablation_rs_plus_peak": {
+        "recall_gain": 0.4473684210526316,
+        "ci95": [
+          0.34210526315789475,
+          0.5526315789473685
+        ]
+      }
+    },
+    "legacy_val": {
+      "integrated_engine": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "baseline_ecc_v3m": {
+        "recall_gain": -0.06666666666666667,
+        "ci95": [
+          -0.2,
+          0.0
+        ]
+      },
+      "decode_failure": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "baseline_peak": {
+        "recall_gain": 0.8666666666666667,
+        "ci95": [
+          0.6666666666666667,
+          1.0
+        ]
+      },
+      "rs_capacity": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "resnet18": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "vit_finetune": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "vit_probe": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "conv_ae": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "patchcore": {
+        "recall_gain": 0.8666666666666667,
+        "ci95": [
+          0.6666666666666667,
+          1.0
+        ]
+      },
+      "baseline_peak_original": {
+        "recall_gain": -0.06666666666666667,
+        "ci95": [
+          -0.2,
+          0.0
+        ]
+      },
+      "rs_capacity+baseline_peak": {
+        "recall_gain": 0.8666666666666667,
+        "ci95": [
+          0.6666666666666667,
+          1.0
+        ]
+      },
+      "rs_capacity+resnet18": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "rs_capacity+baseline_peak+resnet18": {
+        "recall_gain": 0.8666666666666667,
+        "ci95": [
+          0.6666666666666667,
+          1.0
+        ]
+      },
+      "ablation_engine_plus_rs": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "ablation_rs_plus_peak": {
+        "recall_gain": -0.06666666666666667,
+        "ci95": [
+          -0.2,
+          0.0
+        ]
+      }
+    },
+    "legacy_test": {
+      "integrated_engine": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "baseline_ecc_v3m": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "decode_failure": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "baseline_peak": {
+        "recall_gain": 0.8666666666666667,
+        "ci95": [
+          0.6666666666666667,
+          1.0
+        ]
+      },
+      "rs_capacity": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "resnet18": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "vit_finetune": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "vit_probe": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "conv_ae": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "patchcore": {
+        "recall_gain": 0.8666666666666667,
+        "ci95": [
+          0.6666666666666667,
+          1.0
+        ]
+      },
+      "baseline_peak_original": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "rs_capacity+baseline_peak": {
+        "recall_gain": 0.8666666666666667,
+        "ci95": [
+          0.6666666666666667,
+          1.0
+        ]
+      },
+      "rs_capacity+resnet18": {
+        "recall_gain": -0.13333333333333333,
+        "ci95": [
+          -0.3333333333333333,
+          0.0
+        ]
+      },
+      "rs_capacity+baseline_peak+resnet18": {
+        "recall_gain": 0.8666666666666667,
+        "ci95": [
+          0.6666666666666667,
+          1.0
+        ]
+      },
+      "ablation_engine_plus_rs": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "ablation_rs_plus_peak": {
+        "recall_gain": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "coverage": {
+    "val": {
+      "baseline_engine": 1.0,
+      "integrated_engine": 1.0,
+      "baseline_ecc_v3m": 0.1,
+      "decode_failure": 0.8738095238095238,
+      "baseline_peak": 0.8738095238095238,
+      "rs_capacity": 0.7333333333333333,
+      "resnet18": 0.8738095238095238,
+      "vit_finetune": 0.8738095238095238,
+      "vit_probe": 0.8738095238095238,
+      "conv_ae": 0.8738095238095238,
+      "patchcore": 0.8738095238095238
+    },
+    "test_synthetic": {
+      "baseline_engine": 1.0,
+      "integrated_engine": 1.0,
+      "baseline_ecc_v3m": 0.18888888888888888,
+      "decode_failure": 0.9222222222222223,
+      "baseline_peak": 0.9222222222222223,
+      "rs_capacity": 0.7911111111111111,
+      "resnet18": 0.9222222222222223,
+      "vit_finetune": 0.9222222222222223,
+      "vit_probe": 0.9222222222222223,
+      "conv_ae": 0.9222222222222223,
+      "patchcore": 0.9222222222222223
+    },
+    "test_real": {
+      "baseline_engine": 1.0,
+      "integrated_engine": 1.0,
+      "baseline_ecc_v3m": 0.0,
+      "decode_failure": 0.8656716417910447,
+      "baseline_peak": 0.8656716417910447,
+      "rs_capacity": 0.4626865671641791,
+      "resnet18": 0.8656716417910447,
+      "vit_finetune": 0.8656716417910447,
+      "vit_probe": 0.8656716417910447,
+      "conv_ae": 0.8656716417910447,
+      "patchcore": 0.8656716417910447
+    },
+    "test_external": {
+      "baseline_engine": 1.0,
+      "integrated_engine": 1.0,
+      "baseline_ecc_v3m": 0.0,
+      "decode_failure": 0.9137931034482759,
+      "baseline_peak": 0.9137931034482759,
+      "rs_capacity": 0.7241379310344828,
+      "resnet18": 0.9137931034482759,
+      "vit_finetune": 0.9137931034482759,
+      "vit_probe": 0.9137931034482759,
+      "conv_ae": 0.9137931034482759,
+      "patchcore": 0.9137931034482759
+    },
+    "legacy_val": {
+      "baseline_engine": 1.0,
+      "integrated_engine": 1.0,
+      "baseline_ecc_v3m": 1.0,
+      "decode_failure": 1.0,
+      "baseline_peak": 1.0,
+      "rs_capacity": 1.0,
+      "resnet18": 1.0,
+      "vit_finetune": 1.0,
+      "vit_probe": 1.0,
+      "conv_ae": 1.0,
+      "patchcore": 1.0
+    },
+    "legacy_test": {
+      "baseline_engine": 1.0,
+      "integrated_engine": 1.0,
+      "baseline_ecc_v3m": 1.0,
+      "decode_failure": 1.0,
+      "baseline_peak": 1.0,
+      "rs_capacity": 1.0,
+      "resnet18": 1.0,
+      "vit_finetune": 1.0,
+      "vit_probe": 1.0,
+      "conv_ae": 1.0,
+      "patchcore": 1.0
+    }
+  }
+}

@@ -32,6 +32,8 @@ class PreprocessingResult:
     is_version_3: bool
     has_normalized_quiet_zone: bool
     output_dimensions: Optional[Tuple[int, int]]
+    # OpenCV's sampled module grid (True = dark) from the first decode of the original image.
+    module_matrix: Optional[np.ndarray] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Serializes preprocessing metadata for structured JSON output."""
@@ -114,6 +116,7 @@ class QRPreprocessor:
         points = None
         decoded_data = ""
         straight_qrcode = None
+        module_matrix = None
 
         try:
             data, pts, qrcode_img = self.detector.detectAndDecode(gray)
@@ -121,6 +124,11 @@ class QRPreprocessor:
                 points = pts
                 decoded_data = data or ""
                 straight_qrcode = qrcode_img
+                # Grid used by the RS-capacity check: only from this first decode of the original
+                # image, the configuration evaluated in experiments/ (re-decoding the rectified crop
+                # resamples twice and adds module errors on genuine photos).
+                if data and qrcode_img is not None and qrcode_img.size > 0:
+                    module_matrix = qrcode_img < 128
         except Exception:
             pass
 
@@ -248,7 +256,8 @@ class QRPreprocessor:
             detected_version=detected_version,
             is_version_3=is_v3,
             has_normalized_quiet_zone=True,
-            output_dimensions=(self.target_size, self.target_size)
+            output_dimensions=(self.target_size, self.target_size),
+            module_matrix=module_matrix
         )
 
 

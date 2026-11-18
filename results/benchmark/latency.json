@@ -1,0 +1,33 @@
+{
+  "images": 50,
+  "device": "cpu",
+  "threads": 8,
+  "baseline_engine_full_inspection_ms": 107.7,
+  "rs_capacity_ms (incl. OpenCV decode)": 91.2,
+  "rectified_crop_ms": 62.3,
+  "resnet18_forward_ms": 39.2,
+  "vit_finetune_forward_ms": 240.4,
+  "conv_ae_forward_ms": 6.5,
+  "model_size": {
+    "resnet18": {
+      "parameters": 11187158,
+      "checkpoint_mb": 42.7
+    },
+    "vit_finetune": {
+      "parameters": 85800194,
+      "checkpoint_mb": 327.4
+    },
+    "conv_ae": {
+      "parameters": 864232,
+      "checkpoint_mb": 3.3
+    },
+    "rs_capacity": {
+      "parameters": 0,
+      "checkpoint_mb": 0
+    },
+    "patchcore": {
+      "parameters": "ResNet-18 backbone (11.7 M) + memory bank of genuine patch features",
+      "checkpoint_mb": "bank not persisted"
+    }
+  }
+}

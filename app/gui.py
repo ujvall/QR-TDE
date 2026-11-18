@@ -2,7 +2,8 @@
 Q-TDE: QR Code Tampering & URL Risk Inspection, Streamlit interface.
 
 Consumes app/inspector.py and reports two strictly independent evidence dimensions:
-1. Physical integrity (Reed-Solomon ECC for Version 3-M + classical peak high-frequency residual)
+1. Physical integrity (Reed-Solomon syndromes for Version 3-M, Reed-Solomon correction load for all
+   versions, classical peak high-frequency residual)
 2. URL structure (deterministic static analysis; nothing is fetched or executed)
 
 Run from the project root:  streamlit run app/gui.py
@@ -89,6 +90,10 @@ EVIDENCE = {
         "High-frequency residual above τ",
         "A local edge residual exceeded the calibrated threshold.",
     ),
+    "ecc_capacity_exceeded": (
+        "Reed-Solomon correction load above threshold",
+        "An error-correction block needed more corrections than a clean capture normally does.",
+    ),
 }
 
 SEVERITY_TONE = {"CRITICAL": "danger", "HIGH": "danger", "MODERATE": "warn", "LOW": "caution"}
@@ -112,10 +117,14 @@ def physical_meaning(status: str, res: dict) -> str:
     if status == "tampering_detected":
         return "At least one physical check found evidence that the symbol was altered."
     if status == "no_tampering_evidence_detected":
-        return "Neither physical check fired. That is not proof the code is genuine."
+        return "No physical check fired. That is not proof the code is genuine."
     if status == "unsupported_geometry":
         version = prep.get("detected_version")
         found = f"Version {version} symbol found" if version else "Symbol geometry not recognised"
+        rs = res.get("tampering", {}).get("rs_capacity", {})
+        if rs.get("status") == "within_capacity":
+            return (f"{found}. The Reed-Solomon correction load and the visual residual stayed below their "
+                    "thresholds; the full syndrome comparison supports Version 3-M only.")
         return f"{found}. ECC analysis currently supports Version 3-M only; the visual residual stayed below τ."
     if status == "detection_failed":
         return esc(prep.get("message") or "No QR symbol could be localized in this image.")
@@ -290,7 +299,7 @@ METHOD_HTML = """
       <div class="qt-step"><h3><i>2</i>Rectify</h3>
         <p>Perspective warp to <code>370 × 370</code> px with a normalized four-module quiet zone.</p></div>
       <div class="qt-step"><h3><i>3</i>Decode</h3>
-        <p>The payload and symbol version are read; the version decides whether ECC analysis can run.</p></div>
+        <p>The payload, symbol version and sampled module grid are read from the original image.</p></div>
     </div>
     <div class="qt-fork" aria-hidden="true"></div>
     <div class="qt-lanes">
@@ -300,6 +309,9 @@ METHOD_HTML = """
           <li><b>Reed-Solomon syndromes</b>
             <p>Version 3-M only: 70 codewords (44 data, 26 ECC) over GF(2<sup>8</sup>).
               Any non-zero syndrome means sampled codewords were altered.</p></li>
+          <li><b>Reed-Solomon correction load</b>
+            <p>All versions and ECC levels: each block is decoded and the share of its correction
+              capacity used is compared against a validation-calibrated <code>0.29</code>.</p></li>
           <li><b>High-frequency residual</b>
             <p>Peak of <code>|I − GaussianBlur(I)| / 255</code> on a 128 px rendering,
               compared against <code>τ = 0.525490</code>.</p></li>
@@ -342,6 +354,8 @@ READING_HTML = f"""
       <ul>
         <li>Codeword-level alteration in a Version 3-M symbol
           <small>Non-zero Reed-Solomon syndromes after sampling the rectified grid.</small></li>
+        <li>Module damage beyond normal capture noise, any version
+          <small>A Reed-Solomon block needing more corrections than the calibrated threshold.</small></li>
         <li>A localized visual anomaly
           <small>A high-frequency residual above the calibrated threshold.</small></li>
         <li>URL structure commonly associated with abuse
@@ -352,7 +366,8 @@ READING_HTML = f"""
       <h3 data-tone="danger" style="color:var(--tone)">{mod("hatch")}<span style="color:var(--ink)">Cannot establish</span></h3>
       <ul>
         <li>That a code is genuine
-          <small>No evidence detected means neither check fired, nothing more.</small></li>
+          <small>No evidence detected means no check fired, nothing more. A replacement sticker
+            carrying a different valid code is not an ECC error.</small></li>
         <li>That a decoded URL is safe
           <small>A successful decode only means the symbol was readable.</small></li>
         <li>That a URL is malicious
@@ -371,14 +386,16 @@ LIMITS_HTML = f"""
   <h2 class="qt-h2" id="limits-title">Known limitations</h2>
   <dl class="qt-limits">
     <dt>ECC coverage</dt>
-    <dd>Reed-Solomon analysis supports Version 3-M symbols only. Other versions are reported as
-      unsupported geometry, although the visual residual still runs.</dd>
+    <dd>The full syndrome comparison supports Version 3-M only; other versions are reported as
+      unsupported geometry. The correction-load check covers every version, but only when the payload
+      decodes from the original image, and it cannot see a replacement code that is itself valid.</dd>
     <dt>Threshold calibration</dt>
     <dd><code>τ</code> was calibrated on the project's synthetic, binary QR renders. Photographs with
       glare, blur, noise or print texture can shift the residual in either direction.</dd>
     <dt>Learned models</dt>
-    <dd>A Vision Transformer classifier and a convolutional autoencoder were trained and evaluated during
-      research. Neither showed useful discrimination, so neither is part of the active decision path.</dd>
+    <dd>ResNet-18 and ViT-B/16 classifiers, a convolutional autoencoder and a PatchCore-style model
+      were benchmarked on simulated and real photographs. The classifiers rank real photos better than
+      chance but produced unacceptable false-positive rates there, so none is in the active decision path.</dd>
     <dt>No network checks</dt>
     <dd>URLs are never opened, resolved or compared against threat-intelligence feeds.
       Reputation and live content are out of scope.</dd>
@@ -494,6 +511,30 @@ def physical_panel_html(res: dict, prep, input_img: np.ndarray) -> str:
     else:
         peak_body = f'<p class="qt-note">{"Residual analysis failed." if peak_status == "analysis_failed" else "Not run: no rectified symbol was available."}</p>'
 
+    rs = tampering.get("rs_capacity", {})
+    rs_status = rs.get("status", "unavailable")
+    if rs_status in ("within_capacity", "capacity_exceeded"):
+        over = rs_status == "capacity_exceeded"
+        tone = "danger" if over else "muted"
+        used = rs.get("max_capacity_used")
+        thr = float(rs.get("threshold", 0))
+        shown = 1.0 if used is None else min(float(used), 1.0)
+        rs_body = scale_html(
+            shown, 1.0, tone,
+            ticks=[(thr, "qt-tick-tau")],
+            bands=[(thr, 1.0, "danger")],
+            labels=[(0, "0"), (thr, f"{thr:.2f}"), (1.0, "full")],
+            aria=f"Largest block correction load {shown:.2f} against threshold {thr:.2f}",
+        ) + f"""
+<dl class="qt-kv">
+  <dt>Symbol</dt><dd>Version {esc(str(rs.get('version')))}-{esc(str(rs.get('ec_level')))}</dd>
+  <dt>Corrected codewords</dt><dd>{'Block uncorrectable' if used is None else int(rs.get('corrected_codewords') or 0)}</dd>
+  <dt>Largest block load</dt><dd data-tone="{tone}">{'over capacity' if used is None else f'{float(used):.2f}'} of capacity</dd>
+  <dt>Result</dt><dd data-tone="{tone}">{'Above threshold' if over else 'Within threshold'}</dd>
+</dl>"""
+    else:
+        rs_body = '<p class="qt-note">Not run: the payload was not decoded from the original image, so no module grid was sampled.</p>'
+
     version = prep_meta.get("detected_version")
     prep_body = f"""
 <dl class="qt-kv">
@@ -507,6 +548,7 @@ def physical_panel_html(res: dict, prep, input_img: np.ndarray) -> str:
   {frames}
   {evidence_html}
   <div class="qt-block"><h3 class="qt-h3">Reed-Solomon syndromes <small>V3-M · 26 ECC</small></h3>{ecc_body}</div>
+  <div class="qt-block"><h3 class="qt-h3">Reed-Solomon correction load <small>all versions · validation-calibrated</small></h3>{rs_body}</div>
   <div class="qt-block"><h3 class="qt-h3">High-frequency residual <small>128 px · 5×5 blur</small></h3>{peak_body}</div>
   <div class="qt-block"><h3 class="qt-h3">Preprocessing</h3>{prep_body}</div>
 </div>

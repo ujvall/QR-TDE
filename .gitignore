@@ -211,3 +211,10 @@ temp_*.jpg
 !README.md
 !README*.md
 !LICENSE
+
+# External / derived datasets (large, third-party licences) - see dataprep/DATASET_CARD.md
+data/external/
+data/benchmark/
+data/physical/
+models/benchmark/
+.venv-train/

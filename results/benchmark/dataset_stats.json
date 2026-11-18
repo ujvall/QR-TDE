@@ -1,0 +1,234 @@
+{
+  "splits": {
+    "legacy_test": {
+      "images": 30,
+      "genuine": 15,
+      "tampered": 15,
+      "qr_identities": 15,
+      "sources": {
+        "legacy_synthetic": 30
+      },
+      "categories": {
+        "legacy_synthetic": 15
+      },
+      "decodable_genuine": 0,
+      "decodable_tampered": 0,
+      "versions": {
+        "3": 15
+      },
+      "ecc_levels": {
+        "M": 15
+      }
+    },
+    "legacy_val": {
+      "images": 30,
+      "genuine": 15,
+      "tampered": 15,
+      "qr_identities": 15,
+      "sources": {
+        "legacy_synthetic": 30
+      },
+      "categories": {
+        "legacy_synthetic": 15
+      },
+      "decodable_genuine": 0,
+      "decodable_tampered": 0,
+      "versions": {
+        "3": 15
+      },
+      "ecc_levels": {
+        "M": 15
+      }
+    },
+    "test_external": {
+      "images": 174,
+      "genuine": 98,
+      "tampered": 76,
+      "qr_identities": 77,
+      "sources": {
+        "szeged_huawei": 174
+      },
+      "categories": {
+        "sticker_replacement": 11,
+        "label_overlay": 11,
+        "marker_edit": 11,
+        "white_out": 11,
+        "module_patch": 11,
+        "scratch": 11,
+        "finder_alteration": 10
+      },
+      "decodable_genuine": 74,
+      "decodable_tampered": 52,
+      "versions": {
+        "4": 76,
+        "": 22
+      },
+      "ecc_levels": {
+        "unknown": 98
+      }
+    },
+    "test_real": {
+      "images": 134,
+      "genuine": 100,
+      "tampered": 34,
+      "qr_identities": 2,
+      "sources": {
+        "mendeley_surfaces": 134
+      },
+      "categories": {
+        "label_overlay": 5,
+        "marker_edit": 5,
+        "white_out": 5,
+        "module_patch": 5,
+        "scratch": 5,
+        "finder_alteration": 5,
+        "sticker_replacement": 4
+      },
+      "decodable_genuine": 34,
+      "decodable_tampered": 29,
+      "versions": {
+        "": 66,
+        "7": 34
+      },
+      "ecc_levels": {
+        "unknown": 100
+      }
+    },
+    "test_synthetic": {
+      "images": 450,
+      "genuine": 225,
+      "tampered": 225,
+      "qr_identities": 150,
+      "sources": {
+        "simulated": 450
+      },
+      "categories": {
+        "label_overlay": 32,
+        "marker_edit": 34,
+        "sticker_replacement": 29,
+        "white_out": 38,
+        "finder_alteration": 29,
+        "module_patch": 35,
+        "scratch": 28
+      },
+      "decodable_genuine": 199,
+      "decodable_tampered": 156,
+      "versions": {
+        "4": 64,
+        "6": 37,
+        "3": 51,
+        "5": 33,
+        "8": 5,
+        "2": 18,
+        "7": 10,
+        "1": 7
+      },
+      "ecc_levels": {
+        "L": 50,
+        "H": 53,
+        "M": 62,
+        "Q": 60
+      }
+    },
+    "train": {
+      "images": 2128,
+      "genuine": 1064,
+      "tampered": 1064,
+      "qr_identities": 700,
+      "sources": {
+        "simulated": 2128
+      },
+      "categories": {
+        "sticker_replacement": 150,
+        "white_out": 143,
+        "module_patch": 147,
+        "scratch": 158,
+        "finder_alteration": 156,
+        "marker_edit": 156,
+        "label_overlay": 154
+      },
+      "decodable_genuine": 962,
+      "decodable_tampered": 665,
+      "versions": {
+        "8": 22,
+        "4": 252,
+        "3": 192,
+        "5": 208,
+        "6": 169,
+        "7": 105,
+        "2": 63,
+        "1": 53
+      },
+      "ecc_levels": {
+        "H": 289,
+        "M": 247,
+        "L": 260,
+        "Q": 268
+      }
+    },
+    "val": {
+      "images": 420,
+      "genuine": 210,
+      "tampered": 210,
+      "qr_identities": 150,
+      "sources": {
+        "simulated": 420
+      },
+      "categories": {
+        "sticker_replacement": 36,
+        "scratch": 28,
+        "finder_alteration": 29,
+        "module_patch": 32,
+        "white_out": 33,
+        "marker_edit": 24,
+        "label_overlay": 28
+      },
+      "decodable_genuine": 186,
+      "decodable_tampered": 122,
+      "versions": {
+        "7": 23,
+        "2": 18,
+        "4": 42,
+        "3": 31,
+        "5": 52,
+        "1": 6,
+        "6": 30,
+        "8": 8
+      },
+      "ecc_levels": {
+        "H": 70,
+        "Q": 47,
+        "M": 41,
+        "L": 52
+      }
+    }
+  },
+  "near_duplicates_across_splits": {
+    "hash_candidates": 4,
+    "confirmed": 0,
+    "max_candidate_correlation": 0.8388463478327743,
+    "candidates": [
+      {
+        "a": "syn0705_c0_g",
+        "b": "syn0920_c0_g",
+        "correlation": 0.361
+      },
+      {
+        "a": "syn0724_c1_g",
+        "b": "syn0961_c1_g",
+        "correlation": 0.384
+      },
+      {
+        "a": "syn0794_c0_g",
+        "b": "syn0962_c0_g",
+        "correlation": 0.214
+      },
+      {
+        "a": "legacy_val_genuine_078",
+        "b": "legacy_test_genuine_076",
+        "correlation": 0.839
+      }
+    ]
+  },
+  "violations": []
+}

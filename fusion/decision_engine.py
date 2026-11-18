@@ -2,11 +2,14 @@
 Hierarchical Decision Engine for QR Code Detection & Threat Analysis.
 
 Maintains two independent evidence dimensions:
-1. Physical / Structural Tampering Integrity (Reed-Solomon ECC + Classical Peak Anomaly)
+1. Physical / Structural Tampering Integrity (Reed-Solomon ECC + Classical Peak Anomaly +
+   version-generic Reed-Solomon correction-capacity check)
 2. Cyber / Destination URL Risk (StaticURLAnalyzer)
 
-Deep Learning models (ViT, Autoencoder) are explicitly excluded from the active decision path
-based on rigorous experimental characterization showing lack of reference-free discriminative capacity.
+Learned models (ResNet-18, ViT-B/16, convolutional autoencoder, PatchCore-style kNN) remain
+excluded from the active decision path: on the real-photo benchmark splits their
+validation-calibrated thresholds produced unacceptable false-positive rates
+(results/benchmark/REPORT.md).
 """
 
 import os
@@ -15,6 +18,7 @@ import numpy as np
 import qrcode
 from typing import Dict, Any, Optional, Tuple, List
 from url_analysis.url_analyzer import StaticURLAnalyzer
+from ecc.rs_generic import analyze_matrix
 
 
 # ============================================================
@@ -37,6 +41,41 @@ BLOCK_ECC = 26
 # Experimentally calibrated peak high-frequency edge gradient threshold
 # Note: Calibrated specifically for 370x370 / 128x128 binary QR code generation setup.
 PEAK_ANOMALY_THRESHOLD = 0.525490
+
+# Version-generic Reed-Solomon check: alarm when any RS block used more than this fraction of
+# its correction capacity (floor(ecc_codewords / 2)). Calibrated on the simulated validation
+# split only, at 95 % specificity (experiments/benchmark.py, results/benchmark/report.json).
+RS_CAPACITY_THRESHOLD = 0.285714
+
+
+def rs_capacity_evidence(module_matrix: Optional[np.ndarray],
+                         threshold: float = RS_CAPACITY_THRESHOLD) -> Dict[str, Any]:
+    """
+    Graded Reed-Solomon evidence for any QR version / ECC level, from OpenCV's sampled module
+    grid (True = dark). A photographed genuine code often needs a few corrections, so only
+    capacity use above the calibrated threshold is reported as evidence.
+    """
+    base = {"status": "unavailable", "threshold": threshold, "triggered": False, "version": None,
+            "ec_level": None, "corrected_codewords": None, "max_capacity_used": None,
+            "uncorrectable_block": False}
+    if module_matrix is None:
+        return base
+    try:
+        r = analyze_matrix(module_matrix)
+    except Exception:
+        return {**base, "status": "analysis_failed"}
+    if r["status"] == "unsupported":
+        return base
+    used = r["max_capacity_used"]
+    triggered = bool(used > threshold)
+    return {**base,
+            "status": "capacity_exceeded" if triggered else "within_capacity",
+            "triggered": triggered,
+            "version": r.get("version"),
+            "ec_level": r.get("ec_level"),
+            "corrected_codewords": r.get("total_errors"),
+            "max_capacity_used": None if used == float("inf") else round(float(used), 4),
+            "uncorrectable_block": r["status"] == "uncorrectable"}
 
 
 # ============================================================
@@ -245,8 +284,10 @@ class HierarchicalQRDecisionEngine:
     URL risk never alters tampering status, and tampering evidence never alters URL risk.
     """
 
-    def __init__(self, peak_anomaly_threshold: float = PEAK_ANOMALY_THRESHOLD):
+    def __init__(self, peak_anomaly_threshold: float = PEAK_ANOMALY_THRESHOLD,
+                 rs_capacity_threshold: float = RS_CAPACITY_THRESHOLD):
         self.peak_threshold = peak_anomaly_threshold
+        self.rs_threshold = rs_capacity_threshold
         self.url_analyzer = StaticURLAnalyzer()
         self.qr_detector = cv2.QRCodeDetector()
         self.aruco_detector = cv2.QRCodeDetectorAruco() if hasattr(cv2, "QRCodeDetectorAruco") else None
@@ -268,11 +309,16 @@ class HierarchicalQRDecisionEngine:
         self,
         image: Optional[np.ndarray] = None,
         image_path: Optional[str] = None,
-        manual_payload: Optional[str] = None
+        manual_payload: Optional[str] = None,
+        module_matrix: Optional[np.ndarray] = None,
+        derive_module_matrix: bool = True
     ) -> Dict[str, Any]:
         """
         Main inspection entry point.
-        Accepts raw grayscale/BGR image or image path.
+        Accepts raw grayscale/BGR image or image path. module_matrix is OpenCV's sampled
+        module grid (True = dark) from upstream preprocessing; when omitted it is taken from
+        this method's own decode unless derive_module_matrix is False (the inspector passes
+        False because its input is an already-rectified crop).
         """
         # Load image if path provided
         if image is None and image_path is not None:
@@ -296,17 +342,21 @@ class HierarchicalQRDecisionEngine:
 
         if decoded_payload is None:
             try:
-                data, points, _ = self.qr_detector.detectAndDecode(image)
+                data, points, straight = self.qr_detector.detectAndDecode(image)
                 detection_points = points
                 qr_detected = (points is not None)
                 qr_decoded = bool(data)
                 decoded_payload = data if qr_decoded else None
+                if qr_decoded and derive_module_matrix and module_matrix is None and straight is not None and straight.size:
+                    module_matrix = straight < 128
 
                 # If legacy detector failed to decode, try Aruco-based detector if available
                 if not qr_decoded and self.aruco_detector is not None:
-                    data_ar, points_ar, _ = self.aruco_detector.detectAndDecode(image)
+                    data_ar, points_ar, straight_ar = self.aruco_detector.detectAndDecode(image)
                     if data_ar:
                         decoded_payload = data_ar
+                        if derive_module_matrix and module_matrix is None and straight_ar is not None and straight_ar.size:
+                            module_matrix = straight_ar < 128
                         detection_points = points_ar
                         qr_detected = True
                         qr_decoded = True
@@ -358,6 +408,9 @@ class HierarchicalQRDecisionEngine:
         else:
             ecc_status = "decode_failed"
 
+        # Version-generic RS correction-capacity check (independent of the V3-M rule above)
+        rs_capacity = rs_capacity_evidence(module_matrix if decoded_payload else None, self.rs_threshold)
+
         # ------------------------------------------------------------
         # STEP 4: HIERARCHICAL TAMPERING VERDICT
         # ------------------------------------------------------------
@@ -367,6 +420,8 @@ class HierarchicalQRDecisionEngine:
             tampering_evidence.append("ecc_integrity_violation")
         if peak_triggered:
             tampering_evidence.append("local_visual_anomaly")
+        if rs_capacity["triggered"]:
+            tampering_evidence.append("ecc_capacity_exceeded")
 
         if not qr_detected:
             tampering_status = "detection_failed"
@@ -446,6 +501,7 @@ class HierarchicalQRDecisionEngine:
                     "triggered": peak_triggered,
                     "status": peak_status
                 },
+                "rs_capacity": rs_capacity,
                 "summary": tampering_summary
             },
             "url": url_result,
@@ -463,6 +519,7 @@ class HierarchicalQRDecisionEngine:
                 "evidence": [],
                 "ecc": {"module_diff": 0, "nonzero_syndromes": 0, "residual": 0, "status": "unavailable"},
                 "peak_anomaly": {"score": 0.0, "threshold": self.peak_threshold, "triggered": False, "status": "unavailable"},
+                "rs_capacity": rs_capacity_evidence(None, self.rs_threshold),
                 "summary": error_msg
             },
             "url": {

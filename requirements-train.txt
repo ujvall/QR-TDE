@@ -1,0 +1,7 @@
+# Benchmark, training and evaluation (not needed to run the app).
+# For a CUDA build of torch, install it first from https://pytorch.org (e.g. the cu130 index).
+-r requirements.txt
+torch==2.14.1
+torchvision==0.29.1
+transformers==5.16.1
+scikit-learn==1.9.1

@@ -19,6 +19,7 @@ if PROJECT_ROOT not in sys.path:
 from fusion.decision_engine import (
     HierarchicalQRDecisionEngine,
     calculate_peak_high_frequency_anomaly,
+    rs_capacity_evidence,
     PEAK_ANOMALY_THRESHOLD
 )
 from preprocessing.qr_preprocessor import (
@@ -130,17 +131,30 @@ class QRInspector:
                 except Exception:
                     peak_status = "analysis_failed"
 
+            rs_capacity = rs_capacity_evidence(prep.module_matrix, self.engine.rs_threshold)
+
             tampering_evidence = []
+            if rs_capacity["triggered"]:
+                tampering_evidence.append("ecc_capacity_exceeded")
             if peak_triggered:
                 tampering_evidence.append("local_visual_anomaly")
+            if tampering_evidence:
                 tampering_status = "tampering_detected"
-                tampering_summary = f"Visual anomaly detected on unsupported QR geometry (Peak: {round(peak_score, 4)})."
+                tampering_summary = (
+                    f"Tampering detected via: {', '.join(tampering_evidence)} "
+                    f"(Version {prep.detected_version} symbol; V3-M syndrome analysis not applicable)."
+                )
             else:
                 tampering_status = "unsupported_geometry"
                 tampering_summary = (
                     f"Physical integrity analysis unsupported: QR Version {prep.detected_version} detected; "
                     f"current ECC analysis requires Version 3-M."
                 )
+                if rs_capacity["status"] == "within_capacity":
+                    tampering_summary += (
+                        " Generic Reed-Solomon capacity check: within threshold "
+                        f"({rs_capacity['max_capacity_used']} <= {rs_capacity['threshold']})."
+                    )
 
             overall_summary = (
                 f"Physical Integrity: {tampering_summary} | "
@@ -163,6 +177,7 @@ class QRInspector:
                         "triggered": peak_triggered,
                         "status": peak_status
                     },
+                    "rs_capacity": rs_capacity,
                     "summary": tampering_summary
                 },
                 "url": url_result,
@@ -178,7 +193,9 @@ class QRInspector:
         if prep.status == "DECODE_FAILED":
             res = self.engine.inspect(
                 image=prep.rectified_image,
-                manual_payload=manual_payload
+                manual_payload=manual_payload,
+                module_matrix=prep.module_matrix,
+                derive_module_matrix=False
             )
             res["preprocessing"] = prep.to_dict()
             return res
@@ -187,7 +204,9 @@ class QRInspector:
         effective_payload = manual_payload or prep.decoded_payload
         res = self.engine.inspect(
             image=prep.rectified_image,
-            manual_payload=effective_payload
+            manual_payload=effective_payload,
+            module_matrix=prep.module_matrix,
+            derive_module_matrix=False
         )
         res["preprocessing"] = prep.to_dict()
         return res
