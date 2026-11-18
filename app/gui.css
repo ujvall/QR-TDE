@@ -590,3 +590,6 @@ html { scroll-behavior: smooth; }
   .qt-corners, .qt-figure .qt-alter-box { animation: none; stroke-dashoffset: 0; }
   .stApp button:active { transform: none; }
 }
+
+/* Mirror the live camera preview like a selfie view; the captured frame stays unmirrored so QR text is not flipped. */
+[data-testid="stCameraInput"] video { transform: scaleX(-1); }
