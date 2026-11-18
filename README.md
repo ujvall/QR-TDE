@@ -83,8 +83,8 @@ The learned models in `experiments/` are **not** part of this pipeline. See [Res
 Requires Python 3.11.
 
 ```powershell
-git clone https://github.com/ujvall/Q-TDE.git
-cd Q-TDE
+git clone https://github.com/ujvall/QR-TDE.git
+cd QR-TDE
 python -m venv venv
 venv\Scripts\activate          # macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt

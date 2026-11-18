@@ -31,7 +31,7 @@ from preprocessing.qr_preprocessor import preprocess_qr_image
 
 camera_processor = QRCameraProcessor(target_size=370)
 
-REPO_URL = "https://github.com/ujvall/Q-TDE"
+REPO_URL = "https://github.com/ujvall/QR-TDE"
 CSS_PATH = os.path.join(os.path.dirname(__file__), "gui.css")
 
 # Dataset samples are not committed, so only offer the ones present on disk.
