@@ -74,7 +74,7 @@ class TestQRPreprocessor(unittest.TestCase):
         self.assertEqual(res["url"]["risk_level"], "none")
 
     def test_2_ecc_tampered_v3_dataset(self):
-        """2. Existing ECC-tampered Version 3-M sample triggers ECC integrity violation."""
+        """2. ECC-tampered Version 3-M sample: syndromes reported as a diagnostic, not evidence."""
         img_path = "data/val/tampered/tampered_028.png"
         self.assertTrue(os.path.exists(img_path), f"Sample {img_path} must exist.")
 
@@ -84,9 +84,10 @@ class TestQRPreprocessor(unittest.TestCase):
         self.assertTrue(prep.is_version_3)
 
         res = inspect_image(preprocessed=prep)
-        self.assertEqual(res["tampering"]["status"], "tampering_detected")
-        self.assertIn("ecc_integrity_violation", res["tampering"]["evidence"])
+        # Syndromes are still computed on the rectified grid, but only as a diagnostic.
         self.assertGreater(res["tampering"]["ecc"]["residual"], 0)
+        self.assertNotIn("ecc_integrity_violation", res["tampering"]["evidence"])
+        self.assertEqual(res["tampering"]["status"], "no_tampering_evidence_detected")
 
     def test_3_visual_anomaly_v3_dataset(self):
         """3. Existing visual-anomaly Version 3-M sample triggers peak edge gradient."""

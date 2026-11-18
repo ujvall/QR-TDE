@@ -25,7 +25,7 @@ from experiments.common import (ROOT, SCORES, TARGET_SPECIFICITY, binary_metrics
 
 OUT = os.path.join(ROOT, "results", "benchmark")
 VERDICTS = {"baseline_engine": "Original engine (ECC V3-M + peak), before this work",
-            "integrated_engine": "Updated engine (original + RS capacity), as now deployed",
+            "integrated_engine": "Updated engine (RS load + peak; V3-M syndromes diagnostic), as deployed",
             "baseline_ecc_v3m": "Current ECC rule alone (V3-M, any non-zero syndrome)",
             "decode_failure": "Localized but undecodable"}
 CONTINUOUS = {"baseline_peak": "Peak residual, recalibrated",

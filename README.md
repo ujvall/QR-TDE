@@ -27,9 +27,10 @@ resolved or executed.
 - **Localization and perspective correction:** OpenCV detection with an ArUco fallback, warped to
   a normalized 370 × 370 px crop.
 - **Reed-Solomon integrity analysis:**
-  - Full syndrome comparison for Version 3-M symbols.
   - A correction-load check for **every version (1–40) and ECC level (L/M/Q/H)**, calibrated on
     validation data.
+  - Version 3-M syndromes, shown as a diagnostic only, because on photos a single mis-sampled
+    module makes them non-zero.
 - **Visual anomaly detection:** a high-frequency residual on the rectified crop.
 - **Independent URL structural-risk analysis:** 21 weighted rules covering scheme, host, path and
   query. It runs offline and its result never affects the physical readout.
@@ -49,7 +50,7 @@ flowchart LR
     PRE --> PAY[Decoded payload]
 
     subgraph PHYS[Physical integrity]
-        SYN[RS syndromes<br/>Version 3-M only]
+        SYN[RS syndromes, V3-M<br/>diagnostic only]
         LOAD[RS correction load<br/>all versions]
         PEAK[High-frequency residual]
     end
@@ -57,7 +58,8 @@ flowchart LR
     CROP --> SYN
     CROP --> PEAK
     PAY --> SYN
-    SYN & LOAD & PEAK --> TV[Tampering status + evidence]
+    LOAD & PEAK --> TV[Tampering status + evidence]
+    SYN -.-> TV
 
     subgraph URLB[URL structure]
         URL[21 static rules<br/>no network access]
@@ -109,7 +111,7 @@ values, URL indicators and preprocessing metadata.
 | Stage | What it does |
 |---|---|
 | Preprocessing | OpenCV `QRCodeDetector` (ArUco fallback) finds the four corners. The image is warped to 370 × 370 px with a four-module quiet zone, and the payload, version and sampled module grid are read from the original image. |
-| RS syndromes (V3-M) | Re-samples the 29 × 29 grid, unmasks and de-interleaves 70 codewords, and computes 26 syndromes over GF(2⁸). Any non-zero syndrome is evidence. |
+| RS syndromes (V3-M, diagnostic) | Re-samples the 29 × 29 grid, unmasks and de-interleaves 70 codewords, and computes 26 syndromes over GF(2⁸). Reported but not used as evidence: on photographs one mis-sampled module makes them non-zero (10–14 pp specificity cost in the ablation). |
 | RS correction load (all versions) | Decodes each Reed-Solomon block of OpenCV's sampled grid and measures the largest share of a block's correction capacity that was used. A clean photo usually needs a few corrections; above **0.29** (95 % specificity on validation) it is evidence. |
 | High-frequency residual | Peak of `abs(I − GaussianBlur(I)) / 255` on a 128 px rendering, against τ = 0.5255. |
 | URL analysis | Parses the decoded payload locally and scores 21 structural rules (IP-literal hosts, shorteners, punycode, dangerous schemes, embedded credentials and similar) on a 0–100 scale. |
@@ -153,23 +155,24 @@ Full tables with CIs, F1, ROC-AUC, PR-AUC, confusion matrices and per-category r
 | Detector | Synthetic test | Real (Mendeley) | External (Szeged) | Status |
 |---|---|---|---|---|
 | Original engine (before this work) | 15.1 / 85.3 | 0.0 / 100 | 0.0 / 100 | replaced |
-| **Current engine (adds RS correction load)** | **45.8 / 81.8** | **23.5 / 99.0** | **44.7 / 89.8** | **active** |
+| **Current engine (RS correction load + peak)** | **40.4 / 95.1** | **23.5 / 99.0** | **44.7 / 89.8** | **active** |
 | ViT-B/16, fine-tuned | 59.6 / 93.3 | 79.4 / 39.0 | 86.8 / 25.5 | experimental |
 | ResNet-18, fine-tuned | 56.0 / 92.4 | 44.1 / 70.0 | 85.5 / 20.4 | experimental |
 | ViT-B/16, frozen + linear probe | 40.4 / 92.9 | 47.1 / 79.0 | 52.6 / 66.3 | experimental |
 | Conv autoencoder (one-class) | 4.4 / 94.7 | 14.7 / 79.0 | 1.3 / 99.0 | experimental |
 | PatchCore-style kNN (one-class) | 6.7 / 96.9 | 20.6 / 58.0 | 42.1 / 57.1 | experimental |
 
-On the original 30-image synthetic test split, both the original and the current engine score
-13.3 % sensitivity and 100 % specificity. The new component adds recall on every independent split
+On the original 30-image synthetic splits the current engine scores 13.3 % (test) and 6.7 %
+(validation) sensitivity at 100 % specificity; the original engine scored 13.3 % on both. The
+validation difference is one sample whose only signal was a V3-M syndrome mismatch. The new component adds recall on every independent split
 (paired 95 % CIs exclude zero). The fine-tuned classifiers rank real photos well (ViT external
 ROC-AUC 0.82), but at their validation-calibrated thresholds they flag most genuine real photos,
 so they are not used.
 
 ## Limitations
 
-- **Coverage.** The full syndrome comparison supports Version 3-M only. The correction-load check
-  covers all versions, but only when the payload decodes from the original image.
+- **Coverage.** The correction-load check covers all versions, but only when the payload decodes
+  from the original image. The syndrome diagnostic supports Version 3-M only.
 - **What ECC cannot see.** A replacement sticker that carries a different, valid QR code produces
   no Reed-Solomon errors, and sub-module edits that leave each module's majority colour intact are
   not counted. On real photos the active engine catches 0 of 15 sticker replacements.
@@ -204,8 +207,7 @@ site/           Landing page
   definitive test.
 - Calibrate learned detectors on a labelled set of genuine *real* photos. Their ranking quality
   suggests they would complement ECC on sticker replacement once calibration transfers.
-- Extend the full syndrome comparison beyond Version 3-M, and use reference-payload checks where a
-  trusted expected payload is known.
+- Use reference-payload checks where a trusted expected payload is known.
 
 ## Licence and citations
 

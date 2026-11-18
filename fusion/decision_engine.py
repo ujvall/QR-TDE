@@ -2,8 +2,8 @@
 Hierarchical Decision Engine for QR Code Detection & Threat Analysis.
 
 Maintains two independent evidence dimensions:
-1. Physical / Structural Tampering Integrity (Reed-Solomon ECC + Classical Peak Anomaly +
-   version-generic Reed-Solomon correction-capacity check)
+1. Physical / Structural Tampering Integrity (version-generic Reed-Solomon correction load +
+   classical peak anomaly; V3-M syndromes reported as a diagnostic)
 2. Cyber / Destination URL Risk (StaticURLAnalyzer)
 
 Learned models (ResNet-18, ViT-B/16, convolutional autoencoder, PatchCore-style kNN) remain
@@ -269,8 +269,10 @@ class HierarchicalQRDecisionEngine:
 
     Maintains two strictly independent evidence dimensions:
     1. Physical / Structural Tampering Integrity:
-       - Reed-Solomon ECC: evaluates whether extracted Version 3-M codewords produce
-         non-zero syndromes, indicating a Reed-Solomon integrity violation.
+       - Reed-Solomon correction load (all versions): evidence when any RS block used more than
+         RS_CAPACITY_THRESHOLD of its correction capacity.
+       - Reed-Solomon syndromes (Version 3-M): reported as a diagnostic only; non-zero
+         syndromes are not evidence on their own.
        - Peak High-Frequency Anomaly: measures local edge gradient residual against
          calibrated threshold tau = 0.525490, detecting local high-frequency anomalies
          exceeding this threshold.
@@ -416,8 +418,9 @@ class HierarchicalQRDecisionEngine:
         # ------------------------------------------------------------
         tampering_evidence: List[str] = []
         
-        if ecc_triggered:
-            tampering_evidence.append("ecc_integrity_violation")
+        # The V3-M "any non-zero syndrome" result is diagnostic only: on photographs a single
+        # mis-sampled module trips it (10-14 pp specificity loss on the simulated benchmark splits,
+        # docs/EVALUATION.md). Codeword damage is judged by the RS correction-load check instead.
         if peak_triggered:
             tampering_evidence.append("local_visual_anomaly")
         if rs_capacity["triggered"]:
@@ -435,6 +438,10 @@ class HierarchicalQRDecisionEngine:
         else:
             tampering_status = "no_tampering_evidence_detected"
             tampering_summary = "No visual or structural tampering evidence detected."
+            if ecc_triggered:
+                tampering_summary += (
+                    " Diagnostic: V3-M syndromes are non-zero, which alone is not treated as evidence."
+                )
 
         # ------------------------------------------------------------
         # STEP 5: URL DESTINATION RISK ANALYSIS (Independent)
@@ -493,7 +500,8 @@ class HierarchicalQRDecisionEngine:
                     "module_diff": ecc_module_diff,
                     "nonzero_syndromes": ecc_nonzero,
                     "residual": ecc_residual,
-                    "status": ecc_status
+                    "status": ecc_status,
+                    "role": "diagnostic"
                 },
                 "peak_anomaly": {
                     "score": round(peak_score, 6),
@@ -517,7 +525,7 @@ class HierarchicalQRDecisionEngine:
             "tampering": {
                 "status": "unavailable",
                 "evidence": [],
-                "ecc": {"module_diff": 0, "nonzero_syndromes": 0, "residual": 0, "status": "unavailable"},
+                "ecc": {"module_diff": 0, "nonzero_syndromes": 0, "residual": 0, "status": "unavailable", "role": "diagnostic"},
                 "peak_anomaly": {"score": 0.0, "threshold": self.peak_threshold, "triggered": False, "status": "unavailable"},
                 "rs_capacity": rs_capacity_evidence(None, self.rs_threshold),
                 "summary": error_msg

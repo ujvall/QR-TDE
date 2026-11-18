@@ -48,6 +48,7 @@ the photo.
 | Detector | Type | Input |
 |---|---|---|
 | Original engine | V3-M syndrome rule OR peak residual (τ = 0.5255), as deployed before this work | full image via `QRInspector` |
+| Updated engine | RS correction load OR peak residual; V3-M syndromes diagnostic only, as deployed now | full image via `QRInspector` |
 | Peak residual | the engine's high-frequency residual, threshold recalibrated | full image |
 | **RS correction load** (new) | version-generic Reed-Solomon decoding of OpenCV's sampled module grid; score = largest share of any block's correction capacity used | full image |
 | ResNet-18 | ImageNet-pretrained, fully fine-tuned, 15 epochs max, early stopping on validation AUC | 224 px rectified crop |
@@ -74,7 +75,7 @@ Recall and specificity in %, 95 % CI in brackets.
 | Detector | Synthetic test (225/225) | Real, Mendeley (100/34) | External, Szeged (98/76) |
 |---|---|---|---|
 | Original engine | 15.1 / 85.3 | 0.0 / 100 | 0.0 / 100 |
-| **Updated engine (original + RS load)** | **45.8** [39.0–52.4] / 81.8 | **23.5** [10.0–38.7] / **99.0** | **44.7** [33.8–55.4] / **89.8** [80.5–95.9] |
+| **Updated engine (RS load + peak; V3-M syndromes diagnostic)** | **40.4** [33.8–47.1] / **95.1** [91.9–97.8] | **23.5** [10.0–38.7] / **99.0** | **44.7** [33.8–55.4] / **89.8** [80.5–95.9] |
 | RS correction load alone | 39.6 / 96.0 | 23.5 / 99.0 | 44.7 / 89.8 |
 | Peak residual (recalibrated) | 8.0 / 93.8 | 20.6 / 78.0 | 0.0 / 100 |
 | ResNet-18 | 56.0 / 92.4 | 44.1 / **70.0** | 85.5 / **20.4** |
@@ -98,7 +99,7 @@ The updated engine's recall gain over the original engine, paired bootstrap:
 
 | Split | Gain | 95 % CI |
 |---|---|---|
-| Synthetic test | +30.7 pp | +24.1 to +37.4 |
+| Synthetic test | +25.3 pp | +17.6 to +33.3 |
 | Real (Mendeley) | +23.5 pp | +11.8 to +38.2 |
 | External (Szeged) | +44.7 pp | +34.2 to +55.3 |
 
@@ -106,12 +107,12 @@ The updated engine's recall gain over the original engine, paired bootstrap:
 
 | Category | Synthetic | Real | External |
 |---|---|---|---|
-| `label_overlay` | 78 % vs 100 % | 5/5 vs 5/5 | 45 % vs 100 % |
+| `label_overlay` | 75 % vs 100 % | 5/5 vs 5/5 | 45 % vs 100 % |
 | `marker_edit` | 68 % vs 59 % | 1/5 vs 5/5 | 45 % vs 100 % |
-| `white_out` | 53 % vs 53 % | 2/5 vs 4/5 | 82 % vs 100 % |
-| `module_patch` | 66 % vs 26 % | 0/5 vs 5/5 | 73 % vs 100 % |
-| `scratch` | 29 % vs 71 % | 0/5 vs 4/5 | 55 % vs 100 % |
-| `sticker_replacement` | 14 % vs 93 % | 0/4 vs 4/4 | 0 % vs 73 % |
+| `white_out` | 47 % vs 53 % | 2/5 vs 4/5 | 82 % vs 100 % |
+| `module_patch` | 54 % vs 26 % | 0/5 vs 5/5 | 73 % vs 100 % |
+| `scratch` | 18 % vs 71 % | 0/5 vs 4/5 | 55 % vs 100 % |
+| `sticker_replacement` | 7 % vs 93 % | 0/4 vs 4/4 | 0 % vs 73 % |
 | `finder_alteration` | 0 % vs 21 % | 0/5 vs 0/5 | 10 % vs 30 % |
 
 Real-split categories have 4–5 samples each; treat them as indications only.
@@ -121,11 +122,15 @@ Real-split categories have 4–5 samples each; treat them as indications only.
 | Variant | Synthetic rec / spec | Real rec / spec | External rec / spec | Legacy test rec / spec |
 |---|---|---|---|---|
 | Original engine (V3-M rule + peak) | 15.1 / 85.3 | 0.0 / 100 | 0.0 / 100 | 13.3 / 100 |
-| + RS correction load (**deployed**) | 45.8 / 81.8 | 23.5 / 99.0 | 44.7 / 89.8 | 13.3 / 100 |
+| + RS correction load (first integration, `c77b36f5`) | 45.8 / 81.8 | 23.5 / 99.0 | 44.7 / 89.8 | 13.3 / 100 |
 | RS load + peak, V3-M binary rule removed | 39.6 / 96.0 | 23.5 / 99.0 | 44.7 / 89.8 | 13.3 / 100 |
+| **Deployed engine, re-scored end to end** | **40.4 / 95.1** | **23.5 / 99.0** | **44.7 / 89.8** | **13.3 / 100** |
 
-Re-scoring the integrated engine end to end (`experiments.classical --engine-only
-integrated_engine`) reproduces the ablation row exactly on every test split.
+The deployed row comes from re-scoring the actual engine (`experiments.classical --engine-only
+integrated_engine`). It matches the "V3-M rule removed" ablation exactly on the real and external
+splits; on the synthetic test it has two more detections and two more false alarms, because the
+engine computes the peak residual on its own rectified crop. On the legacy validation split it
+detects 1/15 instead of 2/15: sample 028, whose only signal was the syndrome mismatch.
 
 ### Cost
 
@@ -189,13 +194,22 @@ visible, and it follows the project brief. A component is promoted only if both 
 
 The learned models fail criterion 2 by a wide margin and remain experimental.
 
-**What was deliberately not changed.** The ablation shows that the original V3-M "any non-zero
-syndrome" rule costs 10–14 pp of specificity on the simulated validation and test splits. Its
-false alarms come from photographed V3-M codes, where one mis-sampled module trips it. Its only measured benefit is catching sub-module digital edits on the legacy
-images. Those edits change single centre pixels without changing any module's majority colour, so
-the area-based RS check does not count them. Removing the rule is a behavioural change to the
-existing product, so it is left in place and reported here for a decision rather than changed
-silently.
+**The V3-M binary syndrome rule was then removed from the decision path** (on the project owner's
+decision, after the first integration). The ablation showed that it costs 10–14 pp of specificity
+on the simulated validation and test splits. Its false alarms come from photographed V3-M codes,
+where one mis-sampled module trips it. Its only measured benefit was catching sub-module digital
+edits on the legacy images. Those edits change single centre pixels without changing any
+module's majority colour, so the area-based RS check does not count them.
+
+The syndromes are still computed and shown (`ecc.role = "diagnostic"`), and a clean verdict notes
+when they are non-zero, but they are no longer evidence on their own. Effect on the deployed engine:
+
+| Split | Recall | Specificity |
+|---|---|---|
+| Synthetic test | 45.8 → 40.4 % | 81.8 → 95.1 % |
+| Validation | 32.9 → 29.5 % | 86.2 → 95.2 % |
+| Real / external | unchanged | unchanged |
+| Legacy validation | 2/15 → 1/15 | 100 % |
 
 ## 6. Limitations of this evaluation
 

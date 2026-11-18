@@ -3,7 +3,7 @@ Unit and Integration Tests for Application Layer (app/inspector.py).
 
 Covers:
 1. Valid genuine QR (from dataset)
-2. ECC-detected tampered QR (from dataset)
+2. V3-M syndrome mismatch reported as a diagnostic (from dataset)
 3. Visual-anomaly tampered QR (from dataset)
 4. Risky URL payload (via in-memory image inspection)
 5. Invalid/missing image path
@@ -68,16 +68,16 @@ class TestAppInspector(unittest.TestCase):
         self.assertEqual(res["overall"]["url_risk_level"], "none")
 
     def test_2_ecc_detected_tampered_qr(self):
-        """Test inspection of an ECC integrity violation from dataset (tampered_028.png)."""
+        """V3-M syndrome mismatch (tampered_028.png) is surfaced as a diagnostic, not evidence."""
         img_path = "data/val/tampered/tampered_028.png"
         self.assertTrue(os.path.exists(img_path), f"Sample {img_path} must exist.")
 
         res = inspect_image(image_path=img_path)
 
-        self.assertEqual(res["tampering"]["status"], "tampering_detected")
-        self.assertIn("ecc_integrity_violation", res["tampering"]["evidence"])
         self.assertGreater(res["tampering"]["ecc"]["residual"], 0)
-        self.assertEqual(res["overall"]["tampering_status"], "tampering_detected")
+        self.assertEqual(res["tampering"]["ecc"]["role"], "diagnostic")
+        self.assertNotIn("ecc_integrity_violation", res["tampering"]["evidence"])
+        self.assertEqual(res["overall"]["tampering_status"], "no_tampering_evidence_detected")
 
     def test_3_visual_anomaly_tampered_qr(self):
         """Test inspection of a visual anomaly from dataset (tampered_065.png)."""

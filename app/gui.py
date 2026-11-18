@@ -2,8 +2,8 @@
 Q-TDE: QR Code Tampering & URL Risk Inspection, Streamlit interface.
 
 Consumes app/inspector.py and reports two strictly independent evidence dimensions:
-1. Physical integrity (Reed-Solomon syndromes for Version 3-M, Reed-Solomon correction load for all
-   versions, classical peak high-frequency residual)
+1. Physical integrity (Reed-Solomon correction load for all versions, classical peak
+   high-frequency residual; Version 3-M syndromes shown as a diagnostic)
 2. URL structure (deterministic static analysis; nothing is fetched or executed)
 
 Run from the project root:  streamlit run app/gui.py
@@ -37,7 +37,7 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), "gui.css")
 # Dataset samples are not committed, so only offer the ones present on disk.
 _SAMPLE_CANDIDATES = {
     "Genuine, benign URL": ("data/val/genuine/genuine_001.png", "Validation sample 001"),
-    "Tampered, ECC violation": ("data/val/tampered/tampered_028.png", "Validation sample 028"),
+    "Tampered, sub-module edit": ("data/val/tampered/tampered_028.png", "Validation sample 028 · syndromes only"),
     "Tampered, visual anomaly": ("data/val/tampered/tampered_065.png", "Validation sample 065"),
 }
 SAMPLES = {
@@ -82,10 +82,6 @@ URL_STATES = {
 }
 
 EVIDENCE = {
-    "ecc_integrity_violation": (
-        "Reed-Solomon syndrome mismatch",
-        "Sampled codewords no longer satisfy the Version 3-M error-correction equations.",
-    ),
     "local_visual_anomaly": (
         "High-frequency residual above τ",
         "A local edge residual exceeded the calibrated threshold.",
@@ -124,7 +120,7 @@ def physical_meaning(status: str, res: dict) -> str:
         rs = res.get("tampering", {}).get("rs_capacity", {})
         if rs.get("status") == "within_capacity":
             return (f"{found}. The Reed-Solomon correction load and the visual residual stayed below their "
-                    "thresholds; the full syndrome comparison supports Version 3-M only.")
+                    "thresholds; the syndrome diagnostic supports Version 3-M only.")
         return f"{found}. ECC analysis currently supports Version 3-M only; the visual residual stayed below τ."
     if status == "detection_failed":
         return esc(prep.get("message") or "No QR symbol could be localized in this image.")
@@ -306,12 +302,12 @@ METHOD_HTML = """
       <div class="qt-lane">
         <div class="qt-lane-head"><h3>Physical integrity</h3><span>image evidence</span></div>
         <ol>
-          <li><b>Reed-Solomon syndromes</b>
-            <p>Version 3-M only: 70 codewords (44 data, 26 ECC) over GF(2<sup>8</sup>).
-              Any non-zero syndrome means sampled codewords were altered.</p></li>
           <li><b>Reed-Solomon correction load</b>
             <p>All versions and ECC levels: each block is decoded and the share of its correction
               capacity used is compared against a validation-calibrated <code>0.29</code>.</p></li>
+          <li><b>Reed-Solomon syndromes, diagnostic</b>
+            <p>Version 3-M only: 26 syndromes over GF(2<sup>8</sup>). Shown, not used as evidence:
+              one mis-sampled module in a photo makes them non-zero.</p></li>
           <li><b>High-frequency residual</b>
             <p>Peak of <code>|I − GaussianBlur(I)| / 255</code> on a 128 px rendering,
               compared against <code>τ = 0.525490</code>.</p></li>
@@ -352,8 +348,6 @@ READING_HTML = f"""
     <div>
       <h3 data-tone="clear" style="color:var(--tone)">{mod("hollow")}<span style="color:var(--ink)">Can indicate</span></h3>
       <ul>
-        <li>Codeword-level alteration in a Version 3-M symbol
-          <small>Non-zero Reed-Solomon syndromes after sampling the rectified grid.</small></li>
         <li>Module damage beyond normal capture noise, any version
           <small>A Reed-Solomon block needing more corrections than the calibrated threshold.</small></li>
         <li>A localized visual anomaly
@@ -386,7 +380,7 @@ LIMITS_HTML = f"""
   <h2 class="qt-h2" id="limits-title">Known limitations</h2>
   <dl class="qt-limits">
     <dt>ECC coverage</dt>
-    <dd>The full syndrome comparison supports Version 3-M only; other versions are reported as
+    <dd>The syndrome diagnostic supports Version 3-M only; other versions are reported as
       unsupported geometry. The correction-load check covers every version, but only when the payload
       decodes from the original image, and it cannot see a replacement code that is itself valid.</dd>
     <dt>Threshold calibration</dt>
@@ -476,8 +470,10 @@ def physical_panel_html(res: dict, prep, input_img: np.ndarray) -> str:
     if ecc_status in ("valid_codewords", "integrity_violation_detected"):
         violated = ecc_status == "integrity_violation_detected"
         ecc_body = f"""
+<p class="qt-note">Diagnostic only. On photographs a single mis-sampled module makes syndromes non-zero,
+  so they are not used as tampering evidence; the correction-load check below is.</p>
 <dl class="qt-kv">
-  <dt>Codeword check</dt><dd data-tone="{'danger' if violated else 'muted'}">{'Syndrome mismatch' if violated else 'Consistent'}</dd>
+  <dt>Codeword check</dt><dd>{'Syndrome mismatch' if violated else 'Consistent'}</dd>
   <dt>Non-zero syndromes</dt><dd>{int(ecc.get('nonzero_syndromes', 0))} / 26</dd>
   <dt>Syndrome residual</dt><dd>{int(ecc.get('residual', 0))}</dd>
   <dt>Modules differing from re-encoded payload</dt><dd>{int(ecc.get('module_diff', 0))}</dd>
@@ -547,7 +543,7 @@ def physical_panel_html(res: dict, prep, input_img: np.ndarray) -> str:
 <div class="qt-panel qt-reveal" style="--i:2">
   {frames}
   {evidence_html}
-  <div class="qt-block"><h3 class="qt-h3">Reed-Solomon syndromes <small>V3-M · 26 ECC</small></h3>{ecc_body}</div>
+  <div class="qt-block"><h3 class="qt-h3">Reed-Solomon syndromes <small>V3-M · diagnostic</small></h3>{ecc_body}</div>
   <div class="qt-block"><h3 class="qt-h3">Reed-Solomon correction load <small>all versions · validation-calibrated</small></h3>{rs_body}</div>
   <div class="qt-block"><h3 class="qt-h3">High-frequency residual <small>128 px · 5×5 blur</small></h3>{peak_body}</div>
   <div class="qt-block"><h3 class="qt-h3">Preprocessing</h3>{prep_body}</div>

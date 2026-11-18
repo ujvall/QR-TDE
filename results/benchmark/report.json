@@ -21,7 +21,7 @@
   },
   "labels": {
     "baseline_engine": "Original engine (ECC V3-M + peak), before this work",
-    "integrated_engine": "Updated engine (original + RS capacity), as now deployed",
+    "integrated_engine": "Updated engine (RS load + peak; V3-M syndromes diagnostic), as deployed",
     "baseline_ecc_v3m": "Current ECC rule alone (V3-M, any non-zero syndrome)",
     "decode_failure": "Localized but undecodable",
     "baseline_peak": "Peak residual, recalibrated",
@@ -100,26 +100,26 @@
         },
         "integrated_engine": {
           "n": 420,
-          "tp": 69,
-          "tn": 181,
-          "fp": 29,
-          "fn": 141,
-          "accuracy": 0.5952380952380952,
-          "precision": 0.7040816326530612,
-          "recall": 0.32857142857142857,
-          "specificity": 0.861904761904762,
-          "f1": 0.4480519480519481,
-          "fpr": 0.1380952380952381,
-          "fnr": 0.6714285714285714,
-          "roc_auc": 0.5952380952380952,
-          "pr_auc": 0.5670553935860059,
+          "tp": 62,
+          "tn": 200,
+          "fp": 10,
+          "fn": 148,
+          "accuracy": 0.6238095238095238,
+          "precision": 0.8611111111111112,
+          "recall": 0.29523809523809524,
+          "specificity": 0.9523809523809523,
+          "f1": 0.43971631205673756,
+          "fpr": 0.047619047619047616,
+          "fnr": 0.7047619047619048,
+          "roc_auc": 0.6238095238095238,
+          "pr_auc": 0.6066137566137566,
           "recall_ci95": [
-            0.2651060191518468,
-            0.39130947497949137
+            0.23255813953488372,
+            0.3592233009708738
           ],
           "specificity_ci95": [
-            0.80566407131573,
-            0.9113300492610837
+            0.9226959335866047,
+            0.9781029571351056
           ],
           "per_category_recall": {
             "finder_alteration": {
@@ -136,15 +136,15 @@
             },
             "module_patch": {
               "n": 32,
-              "recall": 0.5625
+              "recall": 0.53125
             },
             "scratch": {
               "n": 28,
-              "recall": 0.2857142857142857
+              "recall": 0.10714285714285714
             },
             "sticker_replacement": {
               "n": 36,
-              "recall": 0.08333333333333333
+              "recall": 0.05555555555555555
             },
             "white_out": {
               "n": 33,
@@ -1015,26 +1015,26 @@
         },
         "integrated_engine": {
           "n": 450,
-          "tp": 103,
-          "tn": 184,
-          "fp": 41,
-          "fn": 122,
-          "accuracy": 0.6377777777777778,
-          "precision": 0.7152777777777778,
-          "recall": 0.4577777777777778,
-          "specificity": 0.8177777777777778,
-          "f1": 0.5582655826558266,
-          "fpr": 0.18222222222222223,
-          "fnr": 0.5422222222222223,
-          "roc_auc": 0.6377777777777778,
-          "pr_auc": 0.5985493827160493,
+          "tp": 91,
+          "tn": 214,
+          "fp": 11,
+          "fn": 134,
+          "accuracy": 0.6777777777777778,
+          "precision": 0.8921568627450981,
+          "recall": 0.40444444444444444,
+          "specificity": 0.9511111111111111,
+          "f1": 0.5565749235474006,
+          "fpr": 0.04888888888888889,
+          "fnr": 0.5955555555555555,
+          "roc_auc": 0.6777777777777778,
+          "pr_auc": 0.6586056644880175,
           "recall_ci95": [
-            0.3903323650034176,
-            0.5240227574399322
+            0.3378348743480322,
+            0.4705948298601952
           ],
           "specificity_ci95": [
-            0.7554539089418311,
-            0.8783815357413488
+            0.9191431857389304,
+            0.9776785714285714
           ],
           "per_category_recall": {
             "finder_alteration": {
@@ -1043,7 +1043,7 @@
             },
             "label_overlay": {
               "n": 32,
-              "recall": 0.78125
+              "recall": 0.75
             },
             "marker_edit": {
               "n": 34,
@@ -1051,19 +1051,19 @@
             },
             "module_patch": {
               "n": 35,
-              "recall": 0.6571428571428571
+              "recall": 0.5428571428571428
             },
             "scratch": {
               "n": 28,
-              "recall": 0.2857142857142857
+              "recall": 0.17857142857142858
             },
             "sticker_replacement": {
               "n": 29,
-              "recall": 0.13793103448275862
+              "recall": 0.06896551724137931
             },
             "white_out": {
               "n": 38,
-              "recall": 0.5263157894736842
+              "recall": 0.47368421052631576
             }
           }
         },
@@ -3736,22 +3736,22 @@
         },
         "integrated_engine": {
           "n": 30,
-          "tp": 2,
+          "tp": 1,
           "tn": 15,
           "fp": 0,
-          "fn": 13,
-          "accuracy": 0.5666666666666667,
+          "fn": 14,
+          "accuracy": 0.5333333333333333,
           "precision": 1.0,
-          "recall": 0.13333333333333333,
+          "recall": 0.06666666666666667,
           "specificity": 1.0,
-          "f1": 0.23529411764705882,
+          "f1": 0.125,
           "fpr": 0.0,
-          "fnr": 0.8666666666666667,
-          "roc_auc": 0.5666666666666667,
-          "pr_auc": 0.5666666666666667,
+          "fnr": 0.9333333333333333,
+          "roc_auc": 0.5333333333333333,
+          "pr_auc": 0.5333333333333333,
           "recall_ci95": [
             0.0,
-            0.3333333333333333
+            0.2
           ],
           "specificity_ci95": [
             1.0,
@@ -3760,7 +3760,7 @@
           "per_category_recall": {
             "legacy_synthetic": {
               "n": 15,
-              "recall": 0.13333333333333333
+              "recall": 0.06666666666666667
             }
           }
         },
@@ -4717,10 +4717,10 @@
   "paired_vs_baseline": {
     "val": {
       "integrated_engine": {
-        "recall_gain": 0.26666666666666666,
+        "recall_gain": 0.23333333333333334,
         "ci95": [
-          0.20790710407446278,
-          0.32850581751377833
+          0.16345915841584158,
+          0.30660377358490565
         ]
       },
       "baseline_ecc_v3m": {
@@ -4831,10 +4831,10 @@
     },
     "test_synthetic": {
       "integrated_engine": {
-        "recall_gain": 0.30666666666666664,
+        "recall_gain": 0.2533333333333333,
         "ci95": [
-          0.24090488215488215,
-          0.37392645087148046
+          0.17566974869606447,
+          0.3333333333333333
         ]
       },
       "baseline_ecc_v3m": {
@@ -5173,9 +5173,9 @@
     },
     "legacy_val": {
       "integrated_engine": {
-        "recall_gain": 0.0,
+        "recall_gain": -0.06666666666666667,
         "ci95": [
-          0.0,
+          -0.2,
           0.0
         ]
       },

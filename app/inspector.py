@@ -169,7 +169,8 @@ class QRInspector:
                         "module_diff": 0,
                         "nonzero_syndromes": 0,
                         "residual": 0,
-                        "status": "unsupported_version"
+                        "status": "unsupported_version",
+                        "role": "diagnostic"
                     },
                     "peak_anomaly": {
                         "score": round(peak_score, 6),
