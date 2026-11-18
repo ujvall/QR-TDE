@@ -11,7 +11,7 @@ associated with abuse. It reports both results side by side and never merges the
 [![Streamlit 1.64](https://img.shields.io/badge/streamlit-1.64-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![OpenCV 5.0](https://img.shields.io/badge/opencv-5.0-5C3EE8?logo=opencv&logoColor=white)](https://opencv.org/)
 
-[Live demo](https://q-tdengine.streamlit.app/) · [Evaluation report](docs/EVALUATION.md) · [Dataset card](dataprep/DATASET_CARD.md)
+[Live demo](https://qr-tde.streamlit.app/) · [Evaluation report](docs/EVALUATION.md) · [Dataset card](dataprep/DATASET_CARD.md)
 
 ## Overview
 
